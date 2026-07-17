@@ -2,6 +2,22 @@
 
 A lightweight, zero-build static portfolio designed for GitHub Pages. Edit `index.html` to replace the placeholder name, email, social links, client names, and work sections. Add web-optimized images to `assets/images/` and a CV PDF at `assets/cv.pdf`.
 
+## Project structure
+
+```text
+assets/       # Images, CV, and future media
+scripts/      # JavaScript organised by feature
+styles/       # CSS organised by responsibility
+  base.css        # Design tokens and global reset
+  layout.css      # Navigation and page structure
+  components.css  # Reusable content sections
+  responsive.css  # Narrow-screen rules
+  main.css        # Single stylesheet entry point
+index.html    # Page structure and content
+```
+
+When adding a new feature, keep its styles in the closest existing stylesheet. Create a focused new file only when the feature is substantial, then import it from `styles/main.css`.
+
 ## Publish free with GitHub Pages
 
 1. Push this repository to GitHub.

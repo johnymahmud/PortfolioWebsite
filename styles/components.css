@@ -1,0 +1,34 @@
+/* Reusable content blocks */
+.about h2 { margin: 0; font-size: clamp(41px, 6.5vw, 100px); }
+.prose { max-width: 510px; font-size: 18px; line-height: 1.8; }
+.prose p:first-child { margin-top: 0; }
+.button { display: inline-flex; gap: 25px; border: 1px solid var(--ink); padding: 13px 18px; margin-top: 14px; font: 500 12px "DM Mono", monospace; transition: .2s; }
+.button:hover { background: var(--ink); color: var(--paper); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 100px; border-top: 1px solid var(--line); }
+.stats div { padding: 20px 15px 0 0; }
+.stats div + div { border-left: 1px solid var(--line); padding-left: 20px; }
+.stats strong { display: block; font: 700 36px Manrope, sans-serif; letter-spacing: -.07em; }
+.stats span { color: var(--muted); font-size: 14px; }
+
+.category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 70px; }
+.category-card { min-height: 430px; padding: 28px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; background: #fff; border: 1px solid var(--ink); transition: background .25s ease, color .25s ease; }
+.category-card:hover { background: var(--ink); color: #fff; }
+.card-index, .category-card p { font: 400 11px "DM Mono", monospace; }
+.card-index { position: absolute; top: 25px; }
+.category-card h3 { margin: 0; font: 500 clamp(30px, 3.5vw, 52px)/.97 Manrope, sans-serif; letter-spacing: -.08em; }
+.category-card p { margin: 18px 0 0; }
+.arrow { position: absolute; top: 20px; right: 25px; font-size: 26px; }
+.work-list { padding: 45px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 30px; }
+.placeholder { margin: 0; max-width: 600px; color: var(--muted); }
+
+.clients h2 { margin-bottom: 70px; }
+.client-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-left: 1px solid var(--ink); border-top: 1px solid var(--ink); }
+.client-grid span { min-height: 125px; padding: 20px; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font: 500 12px "DM Mono", monospace; }
+
+.contact { background: var(--ink); color: var(--paper); }
+.contact .section-number { color: #aaa; }
+.contact h2 { margin-bottom: 45px; }
+.email { display: flex; width: max-content; max-width: 100%; gap: 25px; align-items: center; font: 500 clamp(20px, 3vw, 46px) Manrope, sans-serif; letter-spacing: -.07em; border-bottom: 1px solid #777; padding-bottom: 8px; }
+.email span { color: #fff; }
+.socials { display: flex; gap: 24px; margin-top: 90px; font: 400 12px "DM Mono", monospace; }
+footer { padding: 20px var(--page-padding); display: flex; justify-content: space-between; background: var(--ink); color: #9d9d99; border-top: 1px solid #3e3e3b; font: 400 10px "DM Mono", monospace; }

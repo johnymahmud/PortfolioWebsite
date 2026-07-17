@@ -1,0 +1,17 @@
+/* Mobile and narrow-screen adjustments */
+@media (max-width: 700px) {
+  .site-nav { display: none; position: absolute; top: 75px; right: 0; left: 0; background: var(--paper); padding: 24px 20px; border-bottom: 1px solid var(--line); flex-direction: column; }
+  .site-nav.open { display: flex; }
+  .menu-button { display: block; appearance: none; border: 0; background: transparent; font: 500 12px "DM Mono", monospace; }
+  .menu-button span { font-size: 18px; }
+  .hero { min-height: 660px; }
+  .hero-bottom, .work-list { flex-direction: column; }
+  .two-column, .section-heading { grid-template-columns: 1fr; gap: 25px; }
+  .stats { grid-template-columns: 1fr 1fr; margin-top: 65px; }
+  .stats div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .category-grid { grid-template-columns: 1fr; margin-top: 45px; }
+  .category-card { min-height: 300px; }
+  .client-grid { grid-template-columns: 1fr 1fr; }
+  .email { font-size: 23px; }
+  .socials { margin-top: 65px; }
+}
