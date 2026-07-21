@@ -1,17 +1,229 @@
-/* Mobile and narrow-screen adjustments */
+/* =========================================================
+   Responsive System
+   Tablet and mobile adjustments
+   ========================================================= */
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .hero-copy {
+    max-width: 760px;
+  }
+
+  .hero-portrait {
+    width: min(100%, 520px);
+    max-width: none;
+    justify-self: start;
+  }
+
+  .section--split,
+  .section--manifesto {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .section-content {
+    max-width: none;
+  }
+}
+
+/* Mobile */
+
 @media (max-width: 700px) {
-  .site-nav { display: none; position: absolute; top: 75px; right: 0; left: 0; background: var(--paper); padding: 24px 20px; border-bottom: 1px solid var(--line); flex-direction: column; }
-  .site-nav.open { display: flex; }
-  .menu-button { display: block; appearance: none; border: 0; background: transparent; font: 500 12px "DM Mono", monospace; }
-  .menu-button span { font-size: 18px; }
-  .hero { min-height: 660px; }
-  .hero-bottom, .work-list { flex-direction: column; }
-  .two-column, .section-heading { grid-template-columns: 1fr; gap: 25px; }
-  .stats { grid-template-columns: 1fr 1fr; margin-top: 65px; }
-  .stats div:nth-child(3) { border-left: 0; padding-left: 0; }
-  .category-grid { grid-template-columns: 1fr; margin-top: 45px; }
-  .category-card { min-height: 300px; }
-  .client-grid { grid-template-columns: 1fr 1fr; }
-  .email { font-size: 23px; }
-  .socials { margin-top: 65px; }
+  .site-header {
+    min-height: 72px;
+  }
+
+  .menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .site-nav {
+    position: absolute;
+    top: 72px;
+    right: 0;
+    left: 0;
+
+    display: none;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 28px var(--page-padding);
+
+    border-bottom: 1px solid var(--line);
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .site-nav.open {
+    display: flex;
+  }
+
+  .hero {
+    gap: 54px;
+
+    padding-top: 70px;
+    padding-bottom: 90px;
+  }
+
+  .hero-eyebrow {
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+
+  .hero-title {
+    font-size: clamp(46px, 14vw, 74px);
+    line-height: 0.95;
+    letter-spacing: -0.065em;
+  }
+
+  .hero-description {
+    margin-top: 30px;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
+  .hero-portrait {
+    width: 100%;
+  }
+
+  .hero-scroll {
+    display: none;
+  }
+
+  .section {
+    padding-block: clamp(75px, 22vw, 110px);
+  }
+
+  .section--split,
+  .section--manifesto {
+    gap: 34px;
+  }
+
+  .contact-section {
+    padding-block: clamp(75px, 22vw, 110px);
+  }
+
+  footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 700px) {
+  .recognition-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .recognition-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recognition-card {
+    min-height: 240px;
+  }
+}
+/* Contact + Footer Responsive */
+
+@media (max-width: 900px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 65px;
+  }
+
+  .contact-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 40px;
+  }
+
+  .contact-links {
+    grid-column: 1 / -1;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .contact-intro h2 {
+    font-size: clamp(38px, 11vw, 62px);
+  }
+
+  .contact-description {
+    font-size: 15px;
+  }
+
+  .contact-details {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-links {
+    grid-column: auto;
+  }
+
+  .contact-detail a,
+  .contact-detail p {
+    font-size: 19px;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    font-size: 16px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-brand {
+    grid-column: auto;
+  }
+
+  .footer-nav,
+  .footer-social {
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-footer {
+    padding-bottom: 24px;
+  }
+
+  .contact-layout {
+    margin-top: 50px;
+  }
+
+  .footer-logo {
+    font-size: 34px;
+  }
 }

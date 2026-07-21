@@ -1,8 +1,5 @@
-/*
-  Portfolio stylesheet entry point.
-  Add new global styles to one of the focused files below rather than here.
-*/
-@import url("base.css");
-@import url("layout.css");
-@import url("components.css");
-@import url("responsive.css");
+@import url("./base.css");
+@import url("./layout.css");
+@import url("./components.css");
+@import url("./homepage.css");
+@import url("./responsive.css");
