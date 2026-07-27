@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="description" content="Shah Mahmud Portfolio CMS" />
+
+    <title>Portfolio CMS — Shah Mahmud</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+
+  <body>
+    <main class="admin-auth">
+      <section class="admin-auth-panel">
+        <a
+          class="admin-brand"
+          href="../index.html"
+          aria-label="Return to Shah Mahmud portfolio"
+        >
+          SHAH MAHMUD<span>●</span>
+        </a>
+
+        <div class="admin-auth-content">
+          <p class="admin-eyebrow">Private Portfolio CMS</p>
+
+          <h1>Admin Login</h1>
+
+          <p class="admin-intro">
+            Sign in to upload, publish, edit and manage selected portfolio
+            projects.
+          </p>
+
+          <form id="admin-login-form" class="admin-login-form" novalidate>
+            <div class="admin-field">
+              <label for="admin-email">Email</label>
+
+              <input
+                id="admin-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="admin-field">
+              <label for="admin-password">Password</label>
+
+              <input
+                id="admin-password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+            </div>
+
+            <button id="admin-login-button" type="submit">Sign In</button>
+
+            <p
+              id="admin-login-message"
+              class="admin-login-message"
+              aria-live="polite"
+            ></p>
+          </form>
+        </div>
+
+        <p class="admin-security-note">Authorized access only.</p>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/supabase-config.js"></script>
+    <script src="../scripts/supabase-client.js"></script>
+    <script src="./admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,572 @@
+:root {
+  color-scheme: dark;
+  --background: #080808;
+  --surface: #101010;
+  --text: #f2f0eb;
+  --muted: rgba(242, 240, 235, 0.62);
+  --border: rgba(242, 240, 235, 0.16);
+  --error: #ff8f8f;
+  --success: #93d9a3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.05),
+      transparent 34%
+    ),
+    var(--background);
+  font-family: "Manrope", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.admin-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.admin-auth-panel {
+  width: min(100%, 560px);
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid var(--border);
+  background: rgba(16, 16, 16, 0.86);
+}
+
+.admin-brand {
+  display: inline-block;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.admin-brand span {
+  margin-left: 0.25rem;
+}
+
+.admin-auth-content {
+  margin-top: clamp(5rem, 10vh, 8rem);
+}
+
+.admin-eyebrow {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.admin-auth h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+}
+
+.admin-intro {
+  max-width: 430px;
+  margin: 2rem 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 1.4rem;
+  margin-top: 3rem;
+}
+
+.admin-field {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.admin-field label {
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-field input {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  transition: border-color 180ms ease;
+}
+
+.admin-field input:focus {
+  border-color: rgba(242, 240, 235, 0.7);
+}
+
+.admin-login-form button {
+  min-height: 54px;
+  margin-top: 0.6rem;
+  padding: 0.9rem 1.2rem;
+  color: #080808;
+  border: 1px solid #f2f0eb;
+  cursor: pointer;
+  background: #f2f0eb;
+  font-weight: 700;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.admin-login-form button:hover {
+  transform: translateY(-2px);
+}
+
+.admin-login-form button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+  transform: none;
+}
+
+.admin-login-message {
+  min-height: 1.5rem;
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.admin-login-message[data-state="error"] {
+  color: var(--error);
+}
+
+.admin-login-message[data-state="success"] {
+  color: var(--success);
+}
+
+.admin-security-note {
+  margin: 5rem 0 0;
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .admin-auth {
+    padding: 0;
+  }
+
+  .admin-auth-panel {
+    min-height: 100vh;
+    padding: 1.5rem;
+    border: 0;
+  }
+
+  .admin-auth-content {
+    margin-top: 6rem;
+  }
+}
+/* ========================================
+   ADMIN DASHBOARD
+======================================== */
+
+.dashboard {
+  width: min(1400px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 3rem 0 7rem;
+}
+
+.dashboard-header,
+.dashboard-summary,
+.dashboard-section-heading,
+.dashboard-project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.dashboard-header {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.06em;
+}
+
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-header-actions a,
+.dashboard-header-actions button,
+#new-project-button,
+.dashboard-project-actions button {
+  padding: 0.8rem 1rem;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dashboard-header-actions button:hover,
+.dashboard-header-actions a:hover,
+.dashboard-project-actions button:hover {
+  border-color: rgba(242, 240, 235, 0.7);
+}
+
+.dashboard-summary {
+  margin-top: 4rem;
+  padding: clamp(2rem, 5vw, 4rem);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.dashboard-summary span,
+.dashboard-project-category,
+.dashboard-project-details,
+.dashboard-section-heading > p {
+  color: var(--muted);
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashboard-summary h2 {
+  max-width: 780px;
+  margin: 1rem 0 0;
+  font-size: clamp(1.6rem, 3vw, 3rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+}
+
+#new-project-button {
+  flex: 0 0 auto;
+  color: #080808;
+  border-color: #f2f0eb;
+  background: #f2f0eb;
+  font-weight: 700;
+}
+
+.dashboard-projects {
+  margin-top: 6rem;
+}
+
+.dashboard-section-heading {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-section-heading h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.dashboard-status {
+  padding: 3rem 0;
+  color: var(--muted);
+}
+
+.dashboard-project-list {
+  display: grid;
+}
+
+.dashboard-project-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard-project-image {
+  flex: 0 0 120px;
+  width: 120px;
+  height: 90px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.dashboard-project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboard-project-content {
+  flex: 1;
+}
+
+.dashboard-project-content h3 {
+  margin: 0.45rem 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.dashboard-project-category,
+.dashboard-project-details {
+  margin: 0;
+}
+
+.dashboard-project-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.dashboard-project-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+@media (max-width: 760px) {
+  .dashboard {
+    width: min(100% - 28px, 1400px);
+  }
+
+  .dashboard-header,
+  .dashboard-summary,
+  .dashboard-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-project-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-project-image {
+    flex-basis: 100%;
+    width: 100%;
+    height: 220px;
+  }
+
+  .dashboard-project-actions {
+    width: 100%;
+  }
+}
+/* ========================================
+   NEW PROJECT PANEL
+======================================== */
+
+.project-form-panel {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  right: 0;
+  width: min(760px, 100%);
+  height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow-y: auto;
+  border-left: 1px solid var(--border);
+  background: #0b0b0b;
+  transform: translateX(100%);
+  transition: transform 280ms ease;
+}
+
+.project-form-panel.is-open {
+  transform: translateX(0);
+}
+
+.project-form-backdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.project-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.project-form-header h2 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.project-form-close {
+  width: 48px;
+  height: 48px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.8rem;
+}
+
+.project-form {
+  margin-top: 2rem;
+}
+
+.project-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+.project-field-wide {
+  grid-column: 1 / -1;
+}
+
+.admin-field select,
+.admin-field textarea {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  resize: vertical;
+  font: inherit;
+}
+
+.admin-field select:focus,
+.admin-field textarea:focus {
+  border-color: rgba(242, 240, 235, 0.7);
+}
+
+.admin-field select option {
+  color: #080808;
+}
+
+.project-field-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.project-image-preview {
+  grid-column: 1 / -1;
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.project-image-preview img {
+  width: 100%;
+  height: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+
+.project-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 52px;
+  padding: 0 1rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.project-checkbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.project-form-message {
+  min-height: 1.5rem;
+  margin: 1.5rem 0 0;
+}
+
+.project-form-message[data-state="error"] {
+  color: var(--error);
+}
+
+.project-form-message[data-state="success"] {
+  color: var(--success);
+}
+
+.project-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.project-form-actions button {
+  min-height: 50px;
+  padding: 0.8rem 1.2rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.project-form-actions button[type="submit"] {
+  color: #080808;
+  border: 1px solid #f2f0eb;
+  background: #f2f0eb;
+}
+
+.project-secondary-button {
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.project-form-actions button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+body.project-form-open {
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .project-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-field-wide {
+    grid-column: auto;
+  }
+}

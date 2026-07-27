@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta
+      name="description"
+      content="Shah Mahmud — Fine Artist, Art Director and Creative Strategist."
+    />
+
+    <title>Professional Works — Shah Mahmud</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+
+  <body id="top">
+    <header class="site-header">
+      <a class="brand" href="./index.html" aria-label="Shah Mahmud home">
+        SHAH MAHMUD<span>•</span>
+      </a>
+
+      <button
+        class="menu-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        Menu <span>+</span>
+      </button>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#top">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./work.html">See My Work</a>
+        <a href="./journal.html">Journal</a>
+        <a href="./recognition.html">Recognition</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main class="professional-page" data-work-type="Passion Works">
+      <section class="professional-hero">
+        <div class="professional-page-inner">
+          <p class="work-eyebrow">Photography · Performing Arts · Literature</p>
+
+          <h1 class="professional-page-title">Passion Works</h1>
+
+          <p class="professional-page-intro">
+            Personal creative explorations across photography, performance and
+            literature.
+          </p>
+        </div>
+      </section>
+
+      <section
+        class="professional-projects"
+        aria-labelledby="professional-projects-title"
+      >
+        <div class="professional-page-inner">
+          <div class="professional-projects-heading">
+            <p class="work-section-label">Selected Projects</p>
+
+            <h2 id="professional-projects-title">
+              A curated mix of the work that best represents my professional
+              practice.
+            </h2>
+          </div>
+
+          <p
+            id="territory-project-status"
+            class="professional-project-status"
+            aria-live="polite"
+          >
+            Loading selected works…
+          </p>
+
+          <div id="territory-project-groups"></div>
+
+          <div class="professional-explore-more">
+            <a
+              href="https://www.behance.net/shahmahmud"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Explore more on Behance <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <span>© <span id="year"></span> Shah Mahmud</span>
+      <span>Fine Artist · Art Director · Creative Strategist</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./scripts/supabase-config.js"></script>
+    <script src="./scripts/supabase-client.js"></script>
+    <script src="./scripts/main.js"></script>
+    <script src="./scripts/territory-projects.js"></script>
+  </body>
+</html>

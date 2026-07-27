@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Portfolio Dashboard — Shah Mahmud</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+
+  <body>
+    <main id="admin-dashboard" class="dashboard" hidden>
+      <header class="dashboard-header">
+        <div>
+          <p class="admin-eyebrow">Private Portfolio CMS</p>
+          <h1>Dashboard</h1>
+        </div>
+
+        <div class="dashboard-header-actions">
+          <a href="../index.html" target="_blank" rel="noopener noreferrer">
+            View Website ↗
+          </a>
+
+          <button id="admin-logout-button" type="button">Log Out</button>
+        </div>
+      </header>
+
+      <section class="dashboard-summary">
+        <div>
+          <span>Portfolio Management</span>
+
+          <h2>Upload, publish, edit and organize your selected works.</h2>
+        </div>
+
+        <button id="new-project-button" type="button">+ New Project</button>
+      </section>
+
+      <section class="dashboard-projects">
+        <div class="dashboard-section-heading">
+          <div>
+            <p class="admin-eyebrow">Content</p>
+            <h2>Projects</h2>
+          </div>
+
+          <p id="admin-user-email"></p>
+        </div>
+
+        <p id="dashboard-status" class="dashboard-status" aria-live="polite">
+          Loading projects…
+        </p>
+
+        <div id="dashboard-project-list" class="dashboard-project-list"></div>
+      </section>
+
+      <section
+        id="project-form-panel"
+        class="project-form-panel"
+        aria-hidden="true"
+      >
+        <div class="project-form-header">
+          <div>
+            <p class="admin-eyebrow">Portfolio Content</p>
+            <h2 id="project-form-title">Add New Project</h2>
+          </div>
+
+          <button
+            id="close-project-form"
+            class="project-form-close"
+            type="button"
+            aria-label="Close project form"
+          >
+            ×
+          </button>
+        </div>
+
+        <form id="project-form" class="project-form">
+          <input id="editing-project-id" type="hidden" />
+          <div class="project-form-grid">
+            <div class="admin-field project-field-wide">
+              <label for="project-image">Cover Image</label>
+
+              <input
+                id="project-image"
+                name="coverImage"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+              />
+
+              <p class="project-field-note">
+                JPG, PNG or WebP. Maximum 5 MB. Leave empty while editing to
+                keep the current image.
+              </p>
+            </div>
+
+            <div class="project-image-preview" id="project-image-preview">
+              <span>Image preview</span>
+            </div>
+
+            <div class="admin-field">
+              <label for="project-title">Project Title</label>
+
+              <input id="project-title" name="title" type="text" required />
+            </div>
+
+            <div class="admin-field">
+  <label for="project-work-type">Creative Territory</label>
+
+  <select
+    id="project-work-type"
+    name="workType"
+    required
+  >
+    <option value="">Select creative territory</option>
+    <option value="Professional">Professional Works</option>
+    <option value="Fine Arts">Fine Arts</option>
+    <option value="Passion Works">Passion Works</option>
+  </select>
+<div class="admin-field">
+  <label for="project-category">Category</label>
+
+  <select
+    id="project-category"
+    name="category"
+    required
+    disabled
+  >
+    <option value="">Select creative territory first</option>
+  </select>
+</div>
+
+
+            <div class="admin-field">
+              <label for="project-year">Year</label>
+
+              <input
+                id="project-year"
+                name="projectYear"
+                type="number"
+                min="1900"
+                max="2100"
+              />
+            </div>
+
+            <div class="admin-field">
+              <label for="project-client">Client</label>
+
+              <input id="project-client" name="clientName" type="text" />
+            </div>
+
+            <div class="admin-field">
+              <label for="project-behance">Behance URL</label>
+
+              <input
+                id="project-behance"
+                name="behanceUrl"
+                type="url"
+                placeholder="https://www.behance.net/gallery/..."
+              />
+            </div>
+
+            <div class="admin-field">
+  <label for="project-video">YouTube / Video URL</label>
+
+  <input
+    id="project-video"
+    name="videoUrl"
+    type="url"
+    placeholder="https://www.youtube.com/watch?v=..."
+  />
+</div>
+
+<div class="admin-field project-field-wide">
+  <label for="project-full-content">
+    Full Article / Poem Content
+  </label>
+
+  <textarea
+    id="project-full-content"
+    name="fullDescription"
+    rows="12"
+    placeholder="Write the complete article, poem or literature content here..."
+  ></textarea>
+
+  <p class="project-field-note">
+    Use this field only for Literature. Photography and Performing Arts
+    can leave it empty.
+  </p>
+</div>
+
+            <div class="admin-field">
+              <label for="project-order">Display Order</label>
+
+              <input
+                id="project-order"
+                name="sortOrder"
+                type="number"
+                min="1"
+                max="999"
+                value="1"
+                required
+              />
+            </div>
+
+            <div class="admin-field project-field-wide">
+              <label for="project-description">Short Description</label>
+
+              <textarea
+                id="project-description"
+                name="shortDescription"
+                rows="4"
+              ></textarea>
+            </div>
+
+            <label class="project-checkbox">
+              <input
+                id="project-featured"
+                name="isFeatured"
+                type="checkbox"
+                checked
+              />
+
+              <span>Featured project</span>
+            </label>
+
+            <label class="project-checkbox">
+              <input
+                id="project-published"
+                name="isPublished"
+                type="checkbox"
+                checked
+              />
+
+              <span>Published</span>
+            </label>
+          </div>
+
+          <p
+            id="project-form-message"
+            class="project-form-message"
+            aria-live="polite"
+          ></p>
+
+          <div class="project-form-actions">
+            <button
+              id="cancel-project-form"
+              type="button"
+              class="project-secondary-button"
+            >
+              Cancel
+            </button>
+
+            <button id="save-project-button" type="submit">Save Project</button>
+          </div>
+        </form>
+      </section>
+
+      <div
+        id="project-form-backdrop"
+        class="project-form-backdrop"
+        hidden
+      ></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../scripts/supabase-config.js"></script>
+    <script src="../scripts/supabase-client.js"></script>
+    <script src="./dashboard.js"></script>
+  </body>
+</html>
