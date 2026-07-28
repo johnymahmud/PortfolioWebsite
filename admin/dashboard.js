@@ -1,695 +1,295 @@
-const dashboard = document.querySelector("#admin-dashboard");
-const logoutButton = document.querySelector("#admin-logout-button");
-const userEmail = document.querySelector("#admin-user-email");
-const dashboardStatus = document.querySelector("#dashboard-status");
-const projectList = document.querySelector("#dashboard-project-list");
-const newProjectButton = document.querySelector("#new-project-button");
+/**
+ * Admin Dashboard Main Entry Point
+ * Manages "See My Work" Projects CRUD and Territory Filters.
+ */
+import { checkAdminSession, handleAdminLogout } from "./scripts/auth.js";
+import { openPanel, closePanel, showMessage } from "./scripts/admin-modal.js";
+import {
+  populateCategoryOptions,
+  uploadProjectImage,
+  fetchAllProjects,
+  deleteProjectById
+} from "./scripts/project-manager.js";
 
-const projectFormPanel = document.querySelector("#project-form-panel");
-const projectFormBackdrop = document.querySelector("#project-form-backdrop");
-const projectForm = document.querySelector("#project-form");
-const projectFormTitle = document.querySelector("#project-form-title");
-const editingProjectId = document.querySelector("#editing-project-id");
+document.addEventListener("DOMContentLoaded", async () => {
+  const session = await checkAdminSession(true, false);
+  if (!session) return;
 
-const closeProjectFormButton = document.querySelector("#close-project-form");
-const cancelProjectFormButton = document.querySelector("#cancel-project-form");
-const saveProjectButton = document.querySelector("#save-project-button");
-const projectFormMessage = document.querySelector("#project-form-message");
+  const logoutButton = document.querySelector("#admin-logout-button");
+  const userEmail = document.querySelector("#admin-user-email");
+  const dashboardStatus = document.querySelector("#dashboard-status");
+  const projectList = document.querySelector("#dashboard-project-list");
+  const newProjectButton = document.querySelector("#new-project-button");
 
-const projectImageInput = document.querySelector("#project-image");
-const projectImagePreview = document.querySelector("#project-image-preview");
-const projectWorkType = document.querySelector("#project-work-type");
-const projectCategory = document.querySelector("#project-category");
+  const projectFormPanel = document.querySelector("#project-form-panel");
+  const projectFormBackdrop = document.querySelector("#project-form-backdrop");
+  const projectForm = document.querySelector("#project-form");
+  const projectFormTitle = document.querySelector("#project-form-title");
+  const editingProjectId = document.querySelector("#editing-project-id");
 
-const projectTitleInput = document.querySelector("#project-title");
-const projectYearInput = document.querySelector("#project-year");
-const projectClientInput = document.querySelector("#project-client");
-const projectBehanceInput = document.querySelector("#project-behance");
-const projectVideoInput = document.querySelector("#project-video");
+  const closeProjectFormButton = document.querySelector("#close-project-form");
+  const cancelProjectFormButton = document.querySelector("#cancel-project-form");
+  const saveProjectButton = document.querySelector("#save-project-button");
+  const projectFormMessage = document.querySelector("#project-form-message");
 
-const projectFullContentInput = document.querySelector("#project-full-content");
-const projectOrderInput = document.querySelector("#project-order");
-const projectDescriptionInput = document.querySelector("#project-description");
-const projectFeaturedInput = document.querySelector("#project-featured");
-const projectPublishedInput = document.querySelector("#project-published");
+  const projectImageInput = document.querySelector("#project-image");
+  const projectImagePreview = document.querySelector("#project-image-preview");
+  const projectWorkType = document.querySelector("#project-work-type");
+  const projectCategory = document.querySelector("#project-category");
 
-const projectsCache = new Map();
+  const projectTitleInput = document.querySelector("#project-title");
+  const projectYearInput = document.querySelector("#project-year");
+  const projectClientInput = document.querySelector("#project-client");
+  const projectBehanceInput = document.querySelector("#project-behance");
+  const projectVideoInput = document.querySelector("#project-video");
 
-const categoryOptions = {
-  Professional: ["Press Ad", "Campaign", "Logo", "Event", "Digital"],
+  const projectFullContentInput = document.querySelector("#project-full-content");
+  const projectOrderInput = document.querySelector("#project-order");
+  const projectDescriptionInput = document.querySelector("#project-description");
+  const projectFeaturedInput = document.querySelector("#project-featured");
+  const projectPublishedInput = document.querySelector("#project-published");
 
-  "Fine Arts": ["Watercolor", "Sketch", "Drawing"],
+  const filterButtons = document.querySelectorAll("[data-territory]");
 
-  "Passion Works": ["Photography", "Performing Arts", "Literature"],
-};
+  const projectsCache = new Map();
+  let allProjectsList = [];
+  let activeTerritory = "all";
 
-function showProjectFormMessage(message, state = "") {
-  projectFormMessage.textContent = message;
-
-  if (state) {
-    projectFormMessage.dataset.state = state;
-  } else {
-    delete projectFormMessage.dataset.state;
-  }
-}
-
-function openProjectPanel() {
-  projectFormPanel.classList.add("is-open");
-  projectFormPanel.setAttribute("aria-hidden", "false");
-  projectFormBackdrop.hidden = false;
-  document.body.classList.add("project-form-open");
-}
-
-function resetProjectForm() {
-  projectForm.reset();
-  projectWorkType.value = "";
-
-  editingProjectId.value = "";
-  projectFormTitle.textContent = "Add New Project";
-  saveProjectButton.textContent = "Save Project";
-
-  projectWorkType.value = "";
-  projectCategory.disabled = true;
-  projectCategory.innerHTML =
-    '<option value="">Select creative territory first</option>';
-
-  projectImagePreview.innerHTML = "<span>Image preview</span>";
-
-  projectFeaturedInput.checked = true;
-  projectPublishedInput.checked = true;
-  projectOrderInput.value = "1";
-
-  showProjectFormMessage("");
-}
-
-function openNewProjectForm() {
-  resetProjectForm();
-  openProjectPanel();
-}
-
-function closeProjectForm() {
-  projectFormPanel.classList.remove("is-open");
-  projectFormPanel.setAttribute("aria-hidden", "true");
-  projectFormBackdrop.hidden = true;
-
-  document.body.classList.remove("project-form-open");
-
-  resetProjectForm();
-}
-
-function populateCategoryOptions(selectedWorkType, selectedCategory = "") {
-  const options = categoryOptions[selectedWorkType] || [];
-
-  projectCategory.innerHTML = "";
-
-  if (options.length === 0) {
-    projectCategory.disabled = true;
-    projectCategory.innerHTML =
-      '<option value="">Select creative territory first</option>';
-    return;
+  if (userEmail && session.user?.email) {
+    userEmail.textContent = session.user.email;
   }
 
-  projectCategory.disabled = false;
+  logoutButton?.addEventListener("click", handleAdminLogout);
 
-  const placeholder = document.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent = "Select category";
-  projectCategory.appendChild(placeholder);
+  function resetForm() {
+    if (!projectForm) return;
+    projectForm.reset();
+    if (editingProjectId) editingProjectId.value = "";
+    if (projectFormTitle) projectFormTitle.textContent = "Add New Project";
+    if (saveProjectButton) saveProjectButton.textContent = "Save Project";
 
-  options.forEach((optionValue) => {
-    const option = document.createElement("option");
+    if (projectWorkType) projectWorkType.value = "";
+    populateCategoryOptions(projectCategory, "");
 
-    option.value = optionValue;
-    option.textContent = optionValue;
-    option.selected = optionValue === selectedCategory;
+    if (projectImagePreview) projectImagePreview.innerHTML = "<span>Image preview drop zone</span>";
+    if (projectFeaturedInput) projectFeaturedInput.checked = true;
+    if (projectPublishedInput) projectPublishedInput.checked = true;
+    if (projectOrderInput) projectOrderInput.value = "1";
 
-    projectCategory.appendChild(option);
+    showMessage(projectFormMessage, "");
+  }
+
+  function openNewForm() {
+    resetForm();
+    openPanel(projectFormPanel, projectFormBackdrop, "project-form-open");
+  }
+
+  function closeForm() {
+    closePanel(projectFormPanel, projectFormBackdrop, "project-form-open");
+    resetForm();
+  }
+
+  newProjectButton?.addEventListener("click", openNewForm);
+  closeProjectFormButton?.addEventListener("click", closeForm);
+  cancelProjectFormButton?.addEventListener("click", closeForm);
+  projectFormBackdrop?.addEventListener("click", closeForm);
+
+  projectWorkType?.addEventListener("change", (e) => {
+    populateCategoryOptions(projectCategory, e.target.value);
   });
-}
 
-function updateCategoryOptions() {
-  populateCategoryOptions(projectWorkType.value);
-}
-
-function findMainCategory(savedCategory) {
-  for (const [mainCategory, subcategories] of Object.entries(
-    subcategoryOptions,
-  )) {
-    if (subcategories.includes(savedCategory)) {
-      return mainCategory;
+  projectImageInput?.addEventListener("change", () => {
+    const file = projectImageInput.files[0];
+    if (file && projectImagePreview) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        projectImagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-height:220px; object-fit:contain;">`;
+      };
+      reader.readAsDataURL(file);
     }
-  }
-
-  return "";
-}
-
-function previewProjectImage() {
-  const file = projectImageInput.files[0];
-
-  if (!file) {
-    return;
-  }
-
-  projectImagePreview.innerHTML = "";
-
-  const image = document.createElement("img");
-
-  image.src = URL.createObjectURL(file);
-  image.alt = "Selected project preview";
-
-  projectImagePreview.appendChild(image);
-}
-
-function showExistingImage(imageUrl, title) {
-  projectImagePreview.innerHTML = "";
-
-  if (!imageUrl) {
-    projectImagePreview.innerHTML = "<span>No current image</span>";
-    return;
-  }
-
-  const image = document.createElement("img");
-
-  image.src = imageUrl;
-  image.alt = title || "Current project image";
-
-  projectImagePreview.appendChild(image);
-}
-
-function createSlug(title) {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
-function createUniqueFileName(file) {
-  const extension = file.name.split(".").pop().toLowerCase();
-
-  return `professional/${Date.now()}-${crypto.randomUUID()}.${extension}`;
-}
-
-function getStoragePathFromPublicUrl(publicUrl) {
-  if (!publicUrl) {
-    return null;
-  }
-
-  const marker = "/storage/v1/object/public/portfolio-images/";
-  const markerIndex = publicUrl.indexOf(marker);
-
-  if (markerIndex === -1) {
-    return null;
-  }
-
-  return decodeURIComponent(publicUrl.substring(markerIndex + marker.length));
-}
-
-function createDashboardProject(project) {
-  const item = document.createElement("article");
-  item.className = "dashboard-project-item";
-
-  const imageWrapper = document.createElement("div");
-  imageWrapper.className = "dashboard-project-image";
-
-  if (project.cover_image_url) {
-    const image = document.createElement("img");
-
-    image.src = project.cover_image_url;
-    image.alt = project.title || "Portfolio project";
-    image.loading = "lazy";
-
-    imageWrapper.appendChild(image);
-  } else {
-    imageWrapper.textContent = "No image";
-  }
-
-  const content = document.createElement("div");
-  content.className = "dashboard-project-content";
-
-  const category = document.createElement("p");
-  category.className = "dashboard-project-category";
-  category.textContent =
-    [project.work_type, project.category].filter(Boolean).join(" · ") ||
-    "Uncategorized";
-
-  const title = document.createElement("h3");
-  title.textContent = project.title || "Untitled Project";
-
-  const details = document.createElement("p");
-  details.className = "dashboard-project-details";
-  details.textContent = [
-    project.is_published ? "Published" : "Draft",
-    project.is_featured ? "Featured" : "Not featured",
-    `Order ${project.sort_order ?? 0}`,
-  ].join(" · ");
-
-  content.append(category, title, details);
-
-  const actions = document.createElement("div");
-  actions.className = "dashboard-project-actions";
-
-  const editButton = document.createElement("button");
-
-  editButton.type = "button";
-  editButton.textContent = "Edit";
-  editButton.dataset.projectId = project.id;
-
-  editButton.addEventListener("click", () => {
-    openEditProjectForm(project.id);
   });
 
-  const deleteButton = document.createElement("button");
-
-  deleteButton.type = "button";
-  deleteButton.textContent = "Delete";
-  deleteButton.className = "delete-project-button";
-  deleteButton.dataset.projectId = project.id;
-
-  deleteButton.addEventListener("click", () => {
-    deleteProject(project.id);
-  });
-  actions.append(editButton, deleteButton);
-  item.append(imageWrapper, content, actions);
-
-  return item;
-}
-
-async function loadDashboardProjects() {
-  dashboardStatus.hidden = false;
-  dashboardStatus.textContent = "Loading projects…";
-
-  const { data, error } = await window.portfolioDb
-    .from("projects")
-    .select(
-      `
-      id,
-      title,
-      slug,
-      work_type,
-      category,
-      client_name,
-      project_year,
-      short_description,
-      full_description,
-      cover_image_url,
-      behance_url,
-      video_url,
-      is_featured,
-      is_published,
-      sort_order
-    `,
-    )
-    .order("sort_order", { ascending: true });
-
-  if (error) {
-    console.error("Could not load dashboard projects:", error);
-
-    dashboardStatus.textContent =
-      "Projects could not be loaded. Check database permissions.";
-
-    return;
+  function getVisibleProjects() {
+    if (activeTerritory === "all") return allProjectsList;
+    return allProjectsList.filter(p => p.work_type === activeTerritory);
   }
 
-  projectList.innerHTML = "";
-  projectsCache.clear();
+  function renderProjectsGrid() {
+    if (!projectList || !dashboardStatus) return;
+    projectList.innerHTML = "";
 
-  if (!data || data.length === 0) {
-    dashboardStatus.textContent = "No projects found. Add your first project.";
+    const list = getVisibleProjects();
+    if (!list.length) {
+      dashboardStatus.hidden = false;
+      dashboardStatus.textContent = activeTerritory === "all"
+        ? "No projects found. Click '+ Add New Project' to publish your first work."
+        : `No projects found for ${activeTerritory}.`;
+      return;
+    }
 
-    return;
-  }
+    dashboardStatus.hidden = true;
+    list.forEach((project) => {
+      projectsCache.set(project.id, project);
 
-  data.forEach((project) => {
-    projectsCache.set(project.id, project);
+      const item = document.createElement("div");
+      item.className = "dashboard-project-item";
+      item.innerHTML = `
+        <div class="dashboard-project-image">
+          ${project.cover_image_url ? `<img src="${project.cover_image_url}" alt="${project.title}">` : "<span>No Image</span>"}
+        </div>
+        <div class="dashboard-project-content">
+          <span class="dashboard-project-category">${project.work_type || 'Territory'} · ${project.category || 'General'}</span>
+          <h3>${project.title}</h3>
+          <p class="dashboard-project-details">${project.project_year || "N/A"} · ${project.client_name || "Self"} · Order: ${project.sort_order || 1}</p>
+        </div>
+        <div class="dashboard-project-actions">
+          <button type="button" class="admin-secondary-button" data-action="edit" data-id="${project.id}">Edit</button>
+          <button type="button" class="admin-danger-button" data-action="delete" data-id="${project.id}">Delete</button>
+        </div>
+      `;
 
-    projectList.appendChild(createDashboardProject(project));
-  });
-
-  dashboardStatus.hidden = true;
-}
-
-function openEditProjectForm(projectId) {
-  const project = projectsCache.get(projectId);
-
-  if (!project) {
-    alert("Project information could not be found.");
-    return;
-  }
-
-  resetProjectForm();
-
-  editingProjectId.value = project.id;
-  projectFormTitle.textContent = "Edit Project";
-  saveProjectButton.textContent = "Update Project";
-
-  projectTitleInput.value = project.title || "";
-  projectYearInput.value = project.project_year || "";
-  projectClientInput.value = project.client_name || "";
-  projectBehanceInput.value = project.behance_url || "";
-  projectVideoInput.value = project.video_url || "";
-
-  projectFullContentInput.value = project.full_description || "";
-  projectOrderInput.value = project.sort_order ?? 1;
-  projectDescriptionInput.value = project.short_description || "";
-
-  projectFeaturedInput.checked = Boolean(project.is_featured);
-  projectPublishedInput.checked = Boolean(project.is_published);
-
-  const mainCategory = project.work_type || findMainCategory(project.category);
-
-  projectWorkType.value = project.work_type || "";
-
-  populateCategoryOptions(project.work_type || "", project.category || "");
-
-  showExistingImage(project.cover_image_url, project.title);
-
-  openProjectPanel();
-}
-
-async function uploadCoverImage(file) {
-  const filePath = createUniqueFileName(file);
-
-  const { error: uploadError } = await window.portfolioDb.storage
-    .from("portfolio-images")
-    .upload(filePath, file, {
-      cacheControl: "3600",
-      upsert: false,
-      contentType: file.type,
+      projectList.appendChild(item);
     });
-
-  if (uploadError) {
-    throw uploadError;
   }
 
-  const { data } = window.portfolioDb.storage
-    .from("portfolio-images")
-    .getPublicUrl(filePath);
+  async function loadProjects() {
+    if (!dashboardStatus) return;
+    dashboardStatus.hidden = false;
+    dashboardStatus.textContent = "Loading projects…";
 
-  return {
-    publicUrl: data.publicUrl,
-    filePath,
-  };
-}
-
-function buildProjectData(formData, imageUrl) {
-  const title = String(formData.get("title") || "").trim();
-
-  const selectedMainCategory = String(formData.get("category") || "").trim();
-
-  const selectedSubcategory = String(formData.get("subcategory") || "").trim();
-  const selectedWorkType = String(formData.get("workType") || "").trim();
-
-  const selectedCategory = String(formData.get("category") || "").trim();
-
-  return {
-    title,
-
-    work_type: selectedWorkType || null,
-
-    slug: `${createSlug(title)}-${Date.now()}`,
-
-    category: selectedCategory || null,
-
-    client_name: String(formData.get("clientName") || "").trim() || null,
-
-    project_year: Number(formData.get("projectYear")) || null,
-
-    short_description:
-      String(formData.get("shortDescription") || "").trim() || null,
-
-    cover_image_url: imageUrl,
-
-    behance_url: String(formData.get("behanceUrl") || "").trim() || null,
-
-    video_url: String(formData.get("videoUrl") || "").trim() || null,
-
-    full_description:
-      String(formData.get("fullDescription") || "").trim() || null,
-
-    is_featured: formData.get("isFeatured") === "on",
-
-    is_published: formData.get("isPublished") === "on",
-
-    sort_order: Number(formData.get("sortOrder")) || 1,
-
-    updated_at: new Date().toISOString(),
-  };
-}
-
-async function createNewProject(formData, imageFile) {
-  if (!imageFile) {
-    throw new Error("Select a cover image.");
-  }
-
-  showProjectFormMessage("Uploading image…");
-
-  const uploadResult = await uploadCoverImage(imageFile);
-
-  try {
-    showProjectFormMessage("Saving project information…");
-
-    const projectData = buildProjectData(formData, uploadResult.publicUrl);
-
-    const { error } = await window.portfolioDb
-      .from("projects")
-      .insert(projectData);
-
-    if (error) {
-      throw error;
+    try {
+      allProjectsList = await fetchAllProjects();
+      renderProjectsGrid();
+    } catch (err) {
+      console.error(err);
+      dashboardStatus.hidden = false;
+      dashboardStatus.textContent = "Could not load projects from database.";
     }
-  } catch (error) {
-    await window.portfolioDb.storage
-      .from("portfolio-images")
-      .remove([uploadResult.filePath]);
-
-    throw error;
-  }
-}
-
-async function updateExistingProject(projectId, formData, newImageFile) {
-  const existingProject = projectsCache.get(projectId);
-
-  if (!existingProject) {
-    throw new Error("Existing project could not be found.");
   }
 
-  let newUploadResult = null;
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeTerritory = btn.dataset.territory || "all";
+      filterButtons.forEach(b => b.classList.toggle("is-active", b === btn));
+      renderProjectsGrid();
+    });
+  });
 
-  if (newImageFile) {
-    showProjectFormMessage("Uploading replacement image…");
+  projectList?.addEventListener("click", async (e) => {
+    const button = e.target.closest("button[data-action]");
+    if (!button) return;
 
-    newUploadResult = await uploadCoverImage(newImageFile);
-  }
+    const action = button.dataset.action;
+    const id = button.dataset.id;
+    const project = projectsCache.get(id);
 
-  const imageUrl = newUploadResult
-    ? newUploadResult.publicUrl
-    : existingProject.cover_image_url;
+    if (action === "edit" && project) {
+      resetForm();
+      if (editingProjectId) editingProjectId.value = project.id;
+      if (projectFormTitle) projectFormTitle.textContent = "Edit Project";
+      if (saveProjectButton) saveProjectButton.textContent = "Update Project";
 
-  try {
-    showProjectFormMessage("Updating project information…");
+      if (projectWorkType) projectWorkType.value = project.work_type || "";
+      populateCategoryOptions(projectCategory, project.work_type || "", project.category || "");
 
-    const projectData = buildProjectData(formData, imageUrl);
+      if (projectTitleInput) projectTitleInput.value = project.title || "";
+      if (projectYearInput) projectYearInput.value = project.project_year || "";
+      if (projectClientInput) projectClientInput.value = project.client_name || "";
+      if (projectBehanceInput) projectBehanceInput.value = project.behance_url || "";
+      if (projectVideoInput) projectVideoInput.value = project.video_url || "";
+      if (projectFullContentInput) projectFullContentInput.value = project.full_description || "";
+      if (projectOrderInput) projectOrderInput.value = project.sort_order || 1;
+      if (projectDescriptionInput) projectDescriptionInput.value = project.short_description || "";
+      if (projectFeaturedInput) projectFeaturedInput.checked = Boolean(project.is_featured);
+      if (projectPublishedInput) projectPublishedInput.checked = Boolean(project.is_published);
 
-    const { error } = await window.portfolioDb
-      .from("projects")
-      .update(projectData)
-      .eq("id", projectId);
+      if (projectImagePreview && project.cover_image_url) {
+        projectImagePreview.innerHTML = `<img src="${project.cover_image_url}" alt="${project.title}" style="max-height:220px; object-fit:contain;">`;
+      }
 
-    if (error) {
-      throw error;
+      openPanel(projectFormPanel, projectFormBackdrop, "project-form-open");
     }
 
-    if (newUploadResult && existingProject.cover_image_url) {
-      const oldFilePath = getStoragePathFromPublicUrl(
-        existingProject.cover_image_url,
-      );
-
-      if (oldFilePath) {
-        const { error: deleteOldImageError } = await window.portfolioDb.storage
-          .from("portfolio-images")
-          .remove([oldFilePath]);
-
-        if (deleteOldImageError) {
-          console.warn(
-            "Project updated, but old image was not removed:",
-            deleteOldImageError,
-          );
+    if (action === "delete" && id) {
+      if (confirm(`Are you sure you want to delete "${project?.title || 'this project'}"?`)) {
+        button.disabled = true;
+        try {
+          await deleteProjectById(id);
+          await loadProjects();
+        } catch (err) {
+          alert("Failed to delete project.");
+          button.disabled = false;
         }
       }
     }
-  } catch (error) {
-    if (newUploadResult) {
-      await window.portfolioDb.storage
-        .from("portfolio-images")
-        .remove([newUploadResult.filePath]);
+  });
+
+  projectForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = projectTitleInput?.value.trim();
+    const workType = projectWorkType?.value;
+    const category = projectCategory?.value;
+
+    if (!title || !workType || !category) {
+      showMessage(projectFormMessage, "Title, Creative Territory, and Category are required.", "error");
+      return;
     }
 
-    throw error;
-  }
-}
+    saveProjectButton.disabled = true;
+    saveProjectButton.textContent = "Saving…";
+    showMessage(projectFormMessage, "");
 
-async function deleteProject(projectId) {
-  const project = projectsCache.get(projectId);
+    try {
+      let imageUrl = "";
+      const existingId = editingProjectId?.value;
+      const existingProject = existingId ? projectsCache.get(existingId) : null;
 
-  if (!project) {
-    alert("Project information could not be found.");
-    return;
-  }
-
-  const confirmed = window.confirm(
-    `Are you sure you want to delete "${project.title}"?\n\n` +
-      "This action is permanent. The project and its cover image will be deleted.",
-  );
-
-  if (confirmed !== true) {
-    return;
-  }
-
-  const deleteButton = document.querySelector(
-    `.delete-project-button[data-project-id="${projectId}"]`,
-  );
-
-  if (deleteButton) {
-    deleteButton.disabled = true;
-    deleteButton.textContent = "Deleting…";
-  }
-
-  try {
-    const { error: deleteError } = await window.portfolioDb
-      .from("projects")
-      .delete()
-      .eq("id", projectId);
-
-    if (deleteError) {
-      throw deleteError;
-    }
-
-    if (project.cover_image_url) {
-      const filePath = getStoragePathFromPublicUrl(project.cover_image_url);
-
-      if (filePath) {
-        const { error: storageError } = await window.portfolioDb.storage
-          .from("portfolio-images")
-          .remove([filePath]);
-
-        if (storageError) {
-          console.warn(
-            "Project deleted, but its image could not be removed:",
-            storageError,
-          );
-        }
+      if (projectImageInput?.files[0]) {
+        imageUrl = await uploadProjectImage(projectImageInput.files[0]);
+      } else if (existingProject) {
+        imageUrl = existingProject.cover_image_url || "";
       }
+
+      const payload = {
+        title,
+        work_type: workType,
+        category,
+        project_year: projectYearInput?.value.trim() || null,
+        client_name: projectClientInput?.value.trim() || null,
+        behance_url: projectBehanceInput?.value.trim() || null,
+        video_url: projectVideoInput?.value.trim() || null,
+        full_description: projectFullContentInput?.value.trim() || null,
+        short_description: projectDescriptionInput?.value.trim() || null,
+        sort_order: parseInt(projectOrderInput?.value || "1", 10),
+        is_featured: projectFeaturedInput?.checked ?? true,
+        is_published: projectPublishedInput?.checked ?? true,
+        cover_image_url: imageUrl || null
+      };
+
+      if (existingId) {
+        const { error } = await window.portfolioDb
+          .from("projects")
+          .update(payload)
+          .eq("id", existingId);
+        if (error) throw error;
+      } else {
+        const { error } = await window.portfolioDb
+          .from("projects")
+          .insert([payload]);
+        if (error) throw error;
+      }
+
+      closeForm();
+      await loadProjects();
+    } catch (err) {
+      console.error("Save Project Error:", err);
+      showMessage(projectFormMessage, err.message || "Failed to save project.", "error");
+    } finally {
+      saveProjectButton.disabled = false;
+      saveProjectButton.textContent = editingProjectId?.value ? "Update Project" : "Save Project";
     }
+  });
 
-    projectsCache.delete(projectId);
-    await loadDashboardProjects();
-  } catch (error) {
-    console.error("Project deletion failed:", error);
-
-    alert(
-      error.message || "The project could not be deleted. Please try again.",
-    );
-
-    if (deleteButton) {
-      deleteButton.disabled = false;
-      deleteButton.textContent = "Delete";
-    }
-  }
-}
-
-async function saveProject(event) {
-  event.preventDefault();
-
-  const formData = new FormData(projectForm);
-  const imageFile = projectImageInput.files[0];
-  const projectId = editingProjectId.value;
-
-  if (imageFile && imageFile.size > 5 * 1024 * 1024) {
-    showProjectFormMessage("The image must be smaller than 5 MB.", "error");
-
-    return;
-  }
-
-  saveProjectButton.disabled = true;
-
-  saveProjectButton.textContent = projectId ? "Updating…" : "Saving…";
-
-  showProjectFormMessage("");
-
-  try {
-    if (projectId) {
-      await updateExistingProject(projectId, formData, imageFile);
-
-      showProjectFormMessage("Project updated successfully.", "success");
-    } else {
-      await createNewProject(formData, imageFile);
-
-      showProjectFormMessage("Project saved successfully.", "success");
-    }
-
-    await loadDashboardProjects();
-
-    setTimeout(() => {
-      closeProjectForm();
-    }, 700);
-  } catch (error) {
-    console.error("Project save failed:", error);
-
-    showProjectFormMessage(
-      error.message || "Project could not be saved.",
-      "error",
-    );
-  } finally {
-    saveProjectButton.disabled = false;
-
-    saveProjectButton.textContent = projectId
-      ? "Update Project"
-      : "Save Project";
-  }
-}
-
-async function protectDashboard() {
-  const {
-    data: { session },
-    error,
-  } = await window.portfolioDb.auth.getSession();
-
-  if (error || !session) {
-    window.location.replace("./index.html");
-    return;
-  }
-
-  userEmail.textContent = session.user.email || "Authenticated admin";
-
-  dashboard.hidden = false;
-
-  await loadDashboardProjects();
-}
-
-async function logoutAdmin() {
-  logoutButton.disabled = true;
-  logoutButton.textContent = "Logging out…";
-
-  await window.portfolioDb.auth.signOut();
-
-  window.location.replace("./index.html");
-}
-
-logoutButton.addEventListener("click", logoutAdmin);
-newProjectButton.addEventListener("click", openNewProjectForm);
-
-closeProjectFormButton.addEventListener("click", closeProjectForm);
-
-cancelProjectFormButton.addEventListener("click", closeProjectForm);
-
-projectFormBackdrop.addEventListener("click", closeProjectForm);
-
-projectWorkType.addEventListener("change", updateCategoryOptions);
-
-projectImageInput.addEventListener("change", previewProjectImage);
-
-projectForm.addEventListener("submit", saveProject);
-
-protectDashboard();
+  loadProjects();
+});

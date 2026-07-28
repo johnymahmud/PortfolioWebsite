@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>Journal Management | Portfolio Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+
+  <body>
+    <div class="admin-layout">
+      <!-- =====================================
+         ADMIN SIDEBAR
+    ====================================== -->
+
+      <aside class="admin-sidebar">
+        <div class="admin-brand">
+          <a href="dashboard.html"> Portfolio Admin </a>
+        </div>
+
+        <nav class="admin-navigation" aria-label="Admin navigation">
+          <a href="dashboard.html"> Projects (See My Work) </a>
+
+          <a href="journal.html" class="is-active" aria-current="page">
+            Journal
+          </a>
+
+          <a href="../index.html"> View Website </a>
+        </nav>
+
+        <button
+          type="button"
+          id="admin-logout-button"
+          class="admin-logout-button"
+        >
+          Log Out
+        </button>
+      </aside>
+
+      <!-- =====================================
+         MAIN CONTENT
+    ====================================== -->
+
+      <main class="admin-main">
+        <header class="admin-page-header">
+          <div>
+            <p class="admin-page-eyebrow">Content Management</p>
+
+            <h1>Journal</h1>
+
+            <p>
+              Create, edit and publish articles, essays, poetry, stories and
+              personal journal entries.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            id="new-journal-post-button"
+            class="admin-primary-button"
+          >
+            New Journal Post
+          </button>
+        </header>
+
+        <!-- =====================================
+           STATUS MESSAGE
+      ====================================== -->
+
+        <div
+          id="journal-status"
+          class="admin-status-message"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <!-- =====================================
+           JOURNAL FILTERS
+      ====================================== -->
+
+        <section class="admin-toolbar" aria-label="Journal filters">
+          <div class="admin-filter-group">
+            <button
+              type="button"
+              class="journal-filter-button is-active"
+              data-status="all"
+            >
+              All Posts
+            </button>
+
+            <button
+              type="button"
+              class="journal-filter-button"
+              data-status="draft"
+            >
+              Drafts
+            </button>
+
+            <button
+              type="button"
+              class="journal-filter-button"
+              data-status="published"
+            >
+              Published
+            </button>
+
+            <button
+              type="button"
+              class="journal-filter-button"
+              data-status="featured"
+            >
+              Featured
+            </button>
+          </div>
+        </section>
+
+        <!-- =====================================
+           JOURNAL POSTS LIST
+      ====================================== -->
+
+        <section
+          class="admin-content-section"
+          aria-labelledby="journal-posts-heading"
+        >
+          <div class="admin-section-heading">
+            <div>
+              <h2 id="journal-posts-heading">Journal Posts</h2>
+
+              <p id="journal-post-count">0 posts</p>
+            </div>
+          </div>
+
+          <div id="journal-post-list" class="journal-post-list">
+            <p class="admin-empty-message">Journal posts will appear here.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- =====================================
+       JOURNAL EDITOR PANEL
+  ====================================== -->
+
+    <div id="journal-editor" class="journal-editor" aria-hidden="true" hidden>
+      <button
+        type="button"
+        id="journal-editor-backdrop"
+        class="journal-editor-backdrop"
+        aria-label="Close journal editor"
+      ></button>
+
+      <section
+        class="journal-editor-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="journal-editor-title"
+      >
+        <header class="journal-editor-header">
+          <div>
+            <p class="admin-page-eyebrow">Journal Editor</p>
+
+            <h2 id="journal-editor-title">Create New Post</h2>
+          </div>
+
+          <button
+            type="button"
+            id="close-journal-editor"
+            class="admin-icon-button"
+            aria-label="Close journal editor"
+          >
+            ×
+          </button>
+        </header>
+
+        <!-- =====================================
+           JOURNAL FORM
+      ====================================== -->
+
+        <form id="journal-form">
+          <input type="hidden" id="journal-post-id" />
+
+          <div class="admin-form-grid">
+            <div class="admin-field admin-field-full">
+              <label for="journal-title"> Title </label>
+
+              <input
+                type="text"
+                id="journal-title"
+                name="title"
+                lang="bn"
+                spellcheck="true"
+                required
+                maxlength="200"
+                placeholder="Enter journal title"
+              />
+            </div>
+
+            <div class="admin-field admin-field-full">
+              <label for="journal-slug"> URL Slug </label>
+
+              <input
+                type="text"
+                id="journal-slug"
+                name="slug"
+                lang="bn"
+                spellcheck="true"
+                required
+                maxlength="220"
+                placeholder="example-journal-title"
+              />
+
+              <small> Used in the public article URL. </small>
+            </div>
+
+            <div class="admin-field">
+              <label for="journal-category"> Category </label>
+
+              <select id="journal-category" name="category" required>
+                <option value="">Select category</option>
+
+                <option value="Blog">Blog</option>
+
+                <option value="Essay">Essay</option>
+
+                <option value="Poetry">Poetry</option>
+
+                <option value="Short Story">Short Story</option>
+
+                <option value="Art Journal">Art Journal</option>
+
+                <option value="Research">Research</option>
+
+                <option value="Travel">Travel</option>
+
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="admin-field">
+              <label for="journal-status-field"> Status </label>
+
+              <select id="journal-status-field" name="status" required>
+                <option value="draft">Draft</option>
+
+                <option value="published">Published</option>
+              </select>
+            </div>
+
+            <div class="admin-field admin-field-full">
+              <label for="journal-excerpt"> Excerpt </label>
+
+              <textarea
+                id="journal-excerpt"
+                name="excerpt"
+                lang="bn"
+                spellcheck="true"
+                rows="3"
+                placeholder="Write a brief summary or excerpt..."
+              ></textarea>
+            </div>
+
+            <div class="admin-field admin-field-full">
+              <label for="journal-editor-area"> Content </label>
+
+              <div class="journal-rich-editor-wrapper">
+                <div
+                  id="journal-editor-area"
+                  lang="bn"
+                  spellcheck="true"
+                  aria-label="Journal content editor"
+                ></div>
+              </div>
+
+              <input
+                type="hidden"
+                id="journal-content"
+                name="content"
+              />
+
+              <small> Write and format your article using the rich text editor toolbar. </small>
+            </div>
+
+            <div class="admin-field admin-field-full">
+              <label for="journal-cover-image"> Cover Image </label>
+
+              <input
+                type="file"
+                id="journal-cover-image"
+                name="cover_image"
+                accept="image/jpeg,image/png,image/webp"
+              />
+
+              <input type="hidden" id="journal-cover-image-url" />
+
+              <div
+                id="journal-cover-preview"
+                class="journal-cover-preview"
+                hidden
+              >
+                <img
+                  id="journal-cover-preview-image"
+                  src=""
+                  alt="Journal cover preview"
+                />
+
+                <button
+                  type="button"
+                  id="remove-journal-cover"
+                  class="admin-secondary-button"
+                >
+                  Remove Cover
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-field admin-field-full">
+              <label class="admin-checkbox-label">
+                <input
+                  type="checkbox"
+                  id="journal-featured"
+                  name="is_featured"
+                />
+
+                <span> Feature this post on the Journal page </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- =====================================
+             FORM ACTIONS
+        ====================================== -->
+
+          <footer class="journal-form-actions">
+            <button
+              type="button"
+              id="cancel-journal-post"
+              class="admin-secondary-button"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              id="save-journal-post"
+              class="admin-primary-button"
+            >
+              Save Post
+            </button>
+          </footer>
+        </form>
+      </section>
+    </div>
+
+    <!-- =====================================
+       SCRIPTS
+  ====================================== -->
+
+   <script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script src="../scripts/supabase-config.js"></script>
+<script src="../scripts/supabase-client.js"></script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"
+></script>
+
+<script type="module" src="journal.js"></script>
+  </body>
+</html>

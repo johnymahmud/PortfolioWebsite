@@ -1,0 +1,69 @@
+/* =========================================================
+   Creative Journey / Timeline Module
+   ========================================================= */
+
+.creative-journey-section {
+  padding-top: clamp(90px, 11vw, 150px);
+  padding-bottom: clamp(90px, 11vw, 150px);
+}
+
+.journey-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.journey-heading h2 {
+  max-width: 850px;
+}
+
+.journey-list {
+  margin-top: clamp(55px, 7vw, 95px);
+  border-top: 1px solid var(--line);
+}
+
+.journey-item {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.25fr) minmax(0, 1fr);
+  gap: clamp(25px, 5vw, 80px);
+  padding: clamp(28px, 4vw, 48px) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.journey-year {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.journey-item h3 {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+}
+
+.journey-item p {
+  max-width: 650px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.creative-journey-grid {
+  margin-top: clamp(60px, 8vw, 95px);
+}
+
+.creative-journey-card {
+  min-height: 220px;
+}
+
+.creative-journey-link {
+  display: inline-flex;
+  margin-top: 46px;
+}

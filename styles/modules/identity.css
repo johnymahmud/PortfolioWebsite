@@ -1,0 +1,61 @@
+/* =========================================================
+   Identity Section Module
+   ========================================================= */
+
+.identity-section {
+  padding-top: clamp(90px, 11vw, 150px);
+  padding-bottom: clamp(90px, 11vw, 150px);
+}
+
+.identity-intro {
+  max-width: 720px;
+  margin: clamp(36px, 5vw, 70px) 0 0;
+  color: var(--muted);
+  font-size: clamp(16px, 1.2vw, 19px);
+  line-height: 1.8;
+}
+
+.identity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(55px, 7vw, 95px);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.identity-grid > * {
+  min-height: 220px;
+}
+
+.identity-card {
+  min-height: 150px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 30px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.identity-card:hover {
+  background: var(--surface-soft);
+}
+
+.identity-card span {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.identity-card strong {
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}

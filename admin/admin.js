@@ -1,70 +1,57 @@
-const loginForm = document.querySelector("#admin-login-form");
-const emailInput = document.querySelector("#admin-email");
-const passwordInput = document.querySelector("#admin-password");
-const loginButton = document.querySelector("#admin-login-button");
-const loginMessage = document.querySelector("#admin-login-message");
+/**
+ * Admin Login Page Entry Point
+ */
+import { checkAdminSession, handleAdminLogin } from "./scripts/auth.js";
 
-function showLoginMessage(message, state = "") {
-  loginMessage.textContent = message;
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.querySelector("#admin-login-form");
+  const emailInput = document.querySelector("#admin-email");
+  const passwordInput = document.querySelector("#admin-password");
+  const loginButton = document.querySelector("#admin-login-button");
+  const loginMessage = document.querySelector("#admin-login-message");
 
-  if (state) {
-    loginMessage.dataset.state = state;
-  } else {
-    delete loginMessage.dataset.state;
-  }
-}
-
-async function redirectAuthenticatedUser() {
-  const {
-    data: { session },
-    error,
-  } = await window.portfolioDb.auth.getSession();
-
-  if (error) {
-    console.error("Session check failed:", error);
-    return;
+  function showLoginMessage(message, state = "") {
+    if (!loginMessage) return;
+    loginMessage.textContent = message;
+    if (state) {
+      loginMessage.dataset.state = state;
+    } else {
+      delete loginMessage.dataset.state;
+    }
   }
 
-  if (session) {
-    window.location.replace("./dashboard.html");
-  }
-}
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-async function handleAdminLogin(event) {
-  event.preventDefault();
+      const email = emailInput?.value.trim();
+      const password = passwordInput?.value;
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+      if (!email || !password) {
+        showLoginMessage("Enter both your email address and password.", "error");
+        return;
+      }
 
-  if (!email || !password) {
-    showLoginMessage("Enter both your email address and password.", "error");
-    return;
-  }
+      if (loginButton) {
+        loginButton.disabled = true;
+        loginButton.textContent = "Signing In…";
+      }
+      showLoginMessage("");
 
-  loginButton.disabled = true;
-  loginButton.textContent = "Signing In…";
-  showLoginMessage("");
-
-  const { error } = await window.portfolioDb.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    console.error("Admin login failed:", error);
-
-    showLoginMessage("Login failed. Check your email and password.", "error");
-
-    loginButton.disabled = false;
-    loginButton.textContent = "Sign In";
-    return;
+      try {
+        await handleAdminLogin(email, password);
+        showLoginMessage("Login successful. Opening dashboard…", "success");
+        window.location.replace("./dashboard.html");
+      } catch (error) {
+        console.error("Admin login failed:", error);
+        showLoginMessage("Login failed. Check your email and password.", "error");
+        if (loginButton) {
+          loginButton.disabled = false;
+          loginButton.textContent = "Sign In";
+        }
+      }
+    });
   }
 
-  showLoginMessage("Login successful. Opening dashboard…", "success");
-
-  window.location.replace("./dashboard.html");
-}
-
-loginForm.addEventListener("submit", handleAdminLogin);
-
-redirectAuthenticatedUser();
+  checkAdminSession(false, true);
+});
