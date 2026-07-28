@@ -16,12 +16,6 @@ const projectViewerBackdrop = document.querySelector(
 
 const projectViewerClose = document.querySelector("#project-viewer-close");
 
-const projectViewerPrevious = document.querySelector(
-  "#project-viewer-previous",
-);
-
-const projectViewerNext = document.querySelector("#project-viewer-next");
-
 const projectViewerImageContainer = document.querySelector(
   ".project-viewer-image",
 );
@@ -41,15 +35,6 @@ const viewerDescription = document.querySelector("#viewer-description");
 const viewerMeta = document.querySelector("#viewer-meta");
 
 const viewerExplore = document.querySelector("#viewer-explore");
-
-/* ========================================
-   GALLERY / VIEWER STATE
-======================================== */
-
-let allTerritoryProjects = [];
-let visibleProjects = [];
-let activeCategory = "All";
-let currentProjectIndex = -1;
 
 /* ========================================
    TERRITORY SETTINGS
@@ -117,7 +102,6 @@ function getYouTubeEmbedUrl(url) {
 
   try {
     const parsedUrl = new URL(rawUrl);
-
     const hostname = parsedUrl.hostname.replace(/^www\./, "").toLowerCase();
 
     let videoId = "";
@@ -245,33 +229,6 @@ function addViewerMetaItem(label, value) {
 }
 
 /* ========================================
-   VIEWER NAVIGATION
-======================================== */
-
-function updateViewerNavigation() {
-  const hasMultipleProjects = visibleProjects.length > 1;
-
-  if (projectViewerPrevious) {
-    projectViewerPrevious.disabled = !hasMultipleProjects;
-  }
-
-  if (projectViewerNext) {
-    projectViewerNext.disabled = !hasMultipleProjects;
-  }
-}
-
-function showAdjacentProject(direction) {
-  if (visibleProjects.length <= 1) {
-    return;
-  }
-
-  currentProjectIndex =
-    (currentProjectIndex + direction + visibleProjects.length) %
-    visibleProjects.length;
-
-  openProjectViewer(visibleProjects[currentProjectIndex], false);
-}
-/* ========================================
    VIEWER RESET
 ======================================== */
 
@@ -379,7 +336,7 @@ function prepareLiteratureViewer() {
    OPEN PROJECT VIEWER
 ======================================== */
 
-function openProjectViewer(project, updateIndex = true) {
+function openProjectViewer(project) {
   if (
     !projectViewer ||
     !viewerCategory ||
@@ -389,12 +346,6 @@ function openProjectViewer(project, updateIndex = true) {
     !viewerExplore
   ) {
     return;
-  }
-
-  if (updateIndex) {
-    currentProjectIndex = visibleProjects.findIndex(
-      (item) => item.id === project.id,
-    );
   }
 
   resetProjectViewer();
@@ -420,7 +371,6 @@ function openProjectViewer(project, updateIndex = true) {
   const description = getProjectDescription(project);
 
   viewerDescription.textContent = description;
-
   viewerDescription.hidden = !description;
 
   if (mode !== "literature") {
@@ -447,13 +397,9 @@ function openProjectViewer(project, updateIndex = true) {
 
   if (exploreUrl && mode !== "literature") {
     viewerExplore.href = exploreUrl;
-
     viewerExplore.textContent = getExploreText(project);
-
     viewerExplore.hidden = false;
   }
-
-  updateViewerNavigation();
 
   projectViewer.hidden = false;
 
@@ -479,44 +425,16 @@ function closeProjectViewer() {
 
   document.body.classList.remove("project-viewer-open");
 
-  currentProjectIndex = -1;
-
   resetProjectViewer();
 }
-
-/* ========================================
-   VIEWER EVENTS
-======================================== */
 
 projectViewerClose?.addEventListener("click", closeProjectViewer);
 
 projectViewerBackdrop?.addEventListener("click", closeProjectViewer);
 
-projectViewerPrevious?.addEventListener("click", () => {
-  showAdjacentProject(-1);
-});
-
-projectViewerNext?.addEventListener("click", () => {
-  showAdjacentProject(1);
-});
-
 document.addEventListener("keydown", (event) => {
-  if (!projectViewer || projectViewer.hidden) {
-    return;
-  }
-
-  if (event.key === "Escape") {
+  if (event.key === "Escape" && projectViewer && !projectViewer.hidden) {
     closeProjectViewer();
-  }
-
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    showAdjacentProject(-1);
-  }
-
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    showAdjacentProject(1);
   }
 });
 
@@ -541,6 +459,7 @@ function makeCardInteractive(card, project) {
     }
   });
 }
+
 /* ========================================
    IMAGE / VIDEO CARD
 ======================================== */
@@ -592,6 +511,8 @@ function createMediaProjectCard(project) {
 
   action.className = "professional-project-arrow";
 
+  action.setAttribute("aria-hidden", "true");
+
   action.textContent = mode === "video" ? "▶" : "＋";
 
   overlay.append(category, title, action);
@@ -615,7 +536,6 @@ function createLiteratureCard(project) {
   const type = document.createElement("p");
 
   type.className = "literature-project-type";
-
   type.textContent = "Literature";
 
   const title = document.createElement("h3");
@@ -669,7 +589,6 @@ function createCategorySection(categoryName, projects) {
   heading.className = "territory-category-heading";
 
   const title = document.createElement("h2");
-
   title.textContent = categoryName;
 
   const count = document.createElement("p");
@@ -694,101 +613,6 @@ function createCategorySection(categoryName, projects) {
   section.append(heading, grid);
 
   return section;
-}
-
-/* ========================================
-   GALLERY FILTER
-======================================== */
-
-function createTerritoryFilter(settings) {
-  document.querySelector(".territory-filter")?.remove();
-
-  const availableCategories = settings.categories.filter((category) =>
-    allTerritoryProjects.some((project) => project.category === category),
-  );
-
-  if (availableCategories.length <= 1) {
-    return;
-  }
-
-  const filter = document.createElement("div");
-
-  filter.className = "territory-filter";
-
-  ["All", ...availableCategories].forEach((category) => {
-    const button = document.createElement("button");
-
-    button.type = "button";
-
-    button.className = "territory-filter-button";
-
-    button.dataset.category = category;
-
-    button.textContent = category;
-
-    if (category === activeCategory) {
-      button.classList.add("is-active");
-    }
-
-    button.addEventListener("click", () => {
-      activeCategory = category;
-
-      filter.querySelectorAll(".territory-filter-button").forEach((item) => {
-        item.classList.toggle("is-active", item.dataset.category === category);
-      });
-
-      renderTerritoryProjects(settings);
-    });
-
-    filter.appendChild(button);
-  });
-
-  territoryGroups.before(filter);
-}
-/* ========================================
-   RENDER TERRITORY PROJECTS
-======================================== */
-
-function renderTerritoryProjects(settings) {
-  territoryGroups.innerHTML = "";
-
-  visibleProjects =
-    activeCategory === "All"
-      ? [...allTerritoryProjects]
-      : allTerritoryProjects.filter(
-          (project) => project.category === activeCategory,
-        );
-
-  const categoriesToRender =
-    activeCategory === "All" ? settings.categories : [activeCategory];
-
-  let visibleCategoryCount = 0;
-
-  categoriesToRender.forEach((categoryName) => {
-    const categoryProjects = visibleProjects.filter(
-      (project) => project.category === categoryName,
-    );
-
-    if (categoryProjects.length === 0) {
-      return;
-    }
-
-    territoryGroups.appendChild(
-      createCategorySection(categoryName, categoryProjects),
-    );
-
-    visibleCategoryCount += 1;
-  });
-
-  if (visibleCategoryCount === 0) {
-    territoryStatus.hidden = false;
-
-    territoryStatus.textContent = settings.emptyText;
-
-    return;
-  }
-
-  territoryStatus.hidden = true;
 }
 
 /* ========================================
@@ -855,25 +679,39 @@ async function loadTerritoryProjects() {
     return;
   }
 
+  territoryGroups.innerHTML = "";
+
   if (!data || data.length === 0) {
     territoryStatus.textContent = settings.emptyText;
 
     return;
   }
 
-  allTerritoryProjects = data;
+  let visibleCategoryCount = 0;
 
-  visibleProjects = [...data];
+  settings.categories.forEach((categoryName) => {
+    const categoryProjects = data.filter(
+      (project) => project.category === categoryName,
+    );
 
-  activeCategory = "All";
+    if (categoryProjects.length === 0) {
+      return;
+    }
 
-  createTerritoryFilter(settings);
+    territoryGroups.appendChild(
+      createCategorySection(categoryName, categoryProjects),
+    );
 
-  renderTerritoryProjects(settings);
+    visibleCategoryCount += 1;
+  });
+
+  if (visibleCategoryCount === 0) {
+    territoryStatus.textContent = settings.emptyText;
+
+    return;
+  }
+
+  territoryStatus.hidden = true;
 }
-
-/* ========================================
-   INITIALIZE
-======================================== */
 
 loadTerritoryProjects();

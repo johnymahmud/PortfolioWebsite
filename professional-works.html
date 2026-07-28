@@ -97,6 +97,92 @@
             </a>
           </div>
         </div>
+
+        <div
+          id="project-viewer"
+          class="project-viewer"
+          hidden
+          aria-hidden="true"
+        >
+          <div class="project-viewer-backdrop"></div>
+
+          <div class="project-viewer-panel">
+            <button
+              id="project-viewer-close"
+              class="project-viewer-close"
+              type="button"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <div
+              class="project-viewer-navigation"
+              aria-label="Project navigation"
+            >
+              <button
+                id="project-viewer-previous"
+                class="project-viewer-nav-button"
+                type="button"
+                aria-label="Previous project"
+              >
+                ←
+              </button>
+
+              <button
+                id="project-viewer-next"
+                class="project-viewer-nav-button"
+                type="button"
+                aria-label="Next project"
+              >
+                →
+              </button>
+            </div>
+
+            <div class="project-viewer-image">
+              <img id="viewer-image" src="" alt="" />
+            </div>
+
+            <div id="project-viewer-video" class="project-viewer-video" hidden>
+              <iframe
+                id="viewer-video-frame"
+                src=""
+                title="Embedded YouTube video player"
+                frameborder="0"
+                allow="
+                  accelerometer;
+                  autoplay;
+                  clipboard-write;
+                  encrypted-media;
+                  gyroscope;
+                  picture-in-picture;
+                  web-share;
+                "
+                allowfullscreen
+              ></iframe>
+            </div>
+
+            <div class="project-viewer-content">
+              <span id="viewer-category" class="viewer-category"></span>
+
+              <h2 id="viewer-title"></h2>
+
+              <p id="viewer-description" class="viewer-description"></p>
+
+              <div id="viewer-meta" class="viewer-meta"></div>
+
+              <a
+                id="viewer-explore"
+                class="viewer-explore"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explore More →
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
     <footer>
