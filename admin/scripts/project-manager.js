@@ -28,16 +28,20 @@ export function populateCategoryOptions(selectElement, selectedWorkType, selecte
   ].join("");
 }
 
+import { compressImage } from "./journal-manager.js";
+
 export async function uploadProjectImage(file) {
   if (!file || !window.portfolioDb) return "";
 
-  const fileExt = file.name.split(".").pop();
+  const compressedFile = await compressImage(file, 1920, 0.85);
+
+  const fileExt = compressedFile.name.split(".").pop();
   const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
   const filePath = `projects/${fileName}`;
 
   const { error: uploadError } = await window.portfolioDb.storage
     .from("portfolio-assets")
-    .upload(filePath, file);
+    .upload(filePath, compressedFile);
 
   if (uploadError) {
     console.error("Storage Upload Error:", uploadError);

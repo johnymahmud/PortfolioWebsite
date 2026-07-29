@@ -20,4 +20,6 @@
 /* Overrides & Specific Page Styles */
 @import url("./homepage.css");
 @import url("./work.css");
+@import url("./journal-public.css");
 @import url("./responsive.css");
+

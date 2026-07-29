@@ -2,7 +2,12 @@
  * Admin Journal Page Entry Point
  */
 import { checkAdminSession, handleAdminLogout } from "./scripts/auth.js";
-import { createSlug, formatJournalDate, initQuillEditor } from "./scripts/journal-manager.js";
+import {
+  createSlug,
+  formatJournalDate,
+  initQuillEditor,
+  uploadJournalCoverImage
+} from "./scripts/journal-manager.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const session = await checkAdminSession(true, false);
@@ -33,6 +38,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const journalFilterButtons = document.querySelectorAll(".journal-filter-button");
   const saveJournalPostButton = document.querySelector("#save-journal-post");
 
+  const journalCoverImageInput = document.querySelector("#journal-cover-image");
+  const journalCoverImageUrlInput = document.querySelector("#journal-cover-image-url");
+  const journalCoverPreview = document.querySelector("#journal-cover-preview");
+  const journalCoverPreviewImage = document.querySelector("#journal-cover-preview-image");
+  const removeJournalCoverButton = document.querySelector("#remove-journal-cover");
+
   let journalQuill = initQuillEditor(journalEditorArea);
   let allJournalPosts = [];
   let activeJournalFilter = "all";
@@ -59,6 +70,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (journalStatusField) journalStatusField.value = "draft";
     if (journalQuill) journalQuill.setContents([]);
     if (journalContent) journalContent.value = "";
+    if (journalCoverImageInput) journalCoverImageInput.value = "";
+    if (journalCoverImageUrlInput) journalCoverImageUrlInput.value = "";
+    if (journalCoverPreviewImage) journalCoverPreviewImage.src = "";
+    if (journalCoverPreview) journalCoverPreview.hidden = true;
   }
 
   function openJournalEditor() {
@@ -141,7 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (error) {
       console.error("Could not fetch journal posts:", error);
-      showJournalStatus("Failed to load journal posts.", "error");
+      showJournalStatus("Failed to load journal posts. Check database permissions.", "error");
       return;
     }
 
@@ -182,6 +197,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (journalFeatured) journalFeatured.checked = Boolean(post.is_featured);
     if (journalEditorTitle) journalEditorTitle.textContent = "Edit Journal Post";
 
+    if (post.cover_image) {
+      if (journalCoverImageUrlInput) journalCoverImageUrlInput.value = post.cover_image;
+      if (journalCoverPreviewImage) journalCoverPreviewImage.src = post.cover_image;
+      if (journalCoverPreview) journalCoverPreview.hidden = false;
+    }
+
     if (journalQuill && post.content) {
       journalQuill.root.innerHTML = post.content;
     }
@@ -200,12 +221,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (error) {
       console.error("Failed to delete post:", error);
-      showJournalStatus("Could not delete journal post.", "error");
+      showJournalStatus("Could not delete journal post: " + error.message, "error");
+      alert("Delete Error: " + (error.message || "Permission denied"));
       return;
     }
 
     fetchJournalPosts();
   }
+
+  journalCoverImageInput?.addEventListener("change", () => {
+    const file = journalCoverImageInput.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      if (journalCoverPreviewImage) journalCoverPreviewImage.src = objectUrl;
+      if (journalCoverPreview) journalCoverPreview.hidden = false;
+    }
+  });
+
+  removeJournalCoverButton?.addEventListener("click", () => {
+    if (journalCoverImageInput) journalCoverImageInput.value = "";
+    if (journalCoverImageUrlInput) journalCoverImageUrlInput.value = "";
+    if (journalCoverPreviewImage) journalCoverPreviewImage.src = "";
+    if (journalCoverPreview) journalCoverPreview.hidden = true;
+  });
 
   journalForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -224,6 +262,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (saveJournalPostButton) saveJournalPostButton.disabled = true;
 
     try {
+      let coverImageUrl = journalCoverImageUrlInput?.value || null;
+      const coverFile = journalCoverImageInput?.files?.[0];
+      if (coverFile) {
+        showJournalStatus("Uploading cover image...", "info");
+        coverImageUrl = await uploadJournalCoverImage(coverFile);
+      }
+
       const payload = {
         title,
         slug,
@@ -231,6 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         status,
         excerpt: journalExcerpt?.value.trim() || null,
         content: htmlContent,
+        cover_image: coverImageUrl,
         is_featured: journalFeatured?.checked ?? false,
         published_at: status === "published" ? new Date().toISOString() : null
       };
@@ -253,7 +299,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       fetchJournalPosts();
     } catch (err) {
       console.error("Save Journal Post Error:", err);
-      alert(err.message || "Failed to save journal post.");
+      const errMsg = err.message || "Failed to save journal post.";
+      if (errMsg.includes("permission denied") || errMsg.includes("journal_posts")) {
+        alert("Database Permission Error: " + errMsg + "\n\nPlease run the SQL script in Supabase SQL Editor to grant table access.");
+      } else {
+        alert(errMsg);
+      }
     } finally {
       if (saveJournalPostButton) saveJournalPostButton.disabled = false;
     }
@@ -287,3 +338,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   fetchJournalPosts();
 });
+
