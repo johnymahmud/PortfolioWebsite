@@ -11,7 +11,8 @@
   --section-space: clamp(90px, 12vw, 180px);
   --max-width: 1600px;
 
-  --font-body: "Manrope", sans-serif;
+  --font-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-body: "Manrope", "Inter", sans-serif;
   --font-mono: "DM Mono", monospace;
 
   --transition-fast: 180ms ease;
@@ -50,9 +51,39 @@ h1,
 h2,
 h3,
 h4,
+.work-title,
+.work-card-title,
+.work-section-copy,
+.hero-title,
+.professional-page-title,
+.journal-hero-title,
+.journal-title {
+  font-family: var(--font-display);
+}
+
+.work-eyebrow,
+.work-section-label,
+.work-card-number,
+.work-card-kicker,
+.hero-eyebrow,
+.section-label,
+.journey-year,
+.contact-kicker,
+.project-category-tag,
+.dashboard-project-category,
+.dashboard-project-details {
+  font-family: var(--font-mono);
+}
+
 p,
-blockquote {
-  margin-top: 0;
+blockquote,
+.hero-description,
+.identity-intro,
+.work-intro,
+.work-card-description,
+.professional-page-intro,
+.journal-hero-description {
+  font-family: var(--font-body);
 }
 
 a {
