@@ -68,7 +68,7 @@
 }
 
 /* ---------------------------------------------------------
-   Hero
+   Hero & Cinematic Portrait Banner
    --------------------------------------------------------- */
 
 .hero {
@@ -82,6 +82,26 @@
     clamp(70px, 8vw, 130px)
     var(--page-padding)
     clamp(100px, 10vw, 150px);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+/* Full-width Cinematic Portrait Banner */
+.hero-banner-layout {
+  position: relative;
+  min-height: clamp(650px, 85vh, 920px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(80px, 10vw, 140px) var(--page-padding);
+  background-color: #0a0a0a;
+  background-image: 
+    linear-gradient(to right, rgba(10, 10, 10, 1) 0%, rgba(10, 10, 10, 0.82) 42%, rgba(10, 10, 10, 0.38) 72%, rgba(10, 10, 10, 0.75) 100%),
+    linear-gradient(to bottom, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0) 50%, rgba(10, 10, 10, 0.95) 100%),
+    url('/assets/images/johnymahmud.jpg');
+  background-repeat: no-repeat;
+  background-position: center right 5%;
+  background-size: cover;
   border-bottom: 1px solid var(--line);
   overflow: hidden;
 }
@@ -224,11 +244,13 @@
   border-bottom: 1px solid var(--line);
   transition:
     background var(--transition-fast),
+    border-color var(--transition-fast),
     transform var(--transition-fast);
 }
 
 .identity-card:hover {
   background: var(--surface-soft);
+  border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-4px);
 }
 
@@ -711,7 +733,6 @@
 
 /* ---------------------------------------------------------
    Homepage responsive
-   Kept here so homepage rules remain self-contained
    --------------------------------------------------------- */
 
 @media (max-width: 1100px) {
@@ -734,6 +755,13 @@
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
+  }
+
+  .hero-banner-layout {
+    background-position: center right;
+    background-image: 
+      linear-gradient(to right, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.85) 100%),
+      url('/assets/images/johnymahmud.jpg');
   }
 
   .hero-portrait {
@@ -769,67 +797,5 @@
 
   .footer-brand {
     grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero {
-    padding-top: 70px;
-    padding-bottom: 90px;
-  }
-
-  .hero-title {
-    font-size: clamp(48px, 15vw, 78px);
-    line-height: 0.94;
-  }
-
-  .hero-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .hero-actions .button {
-    width: 100%;
-  }
-
-  .section.section--split {
-    padding-top: 76px;
-    padding-bottom: 76px;
-  }
-
-  .section-content h2 {
-    font-size: clamp(44px, 13vw, 68px);
-  }
-
-  .identity-grid,
-  .recognition-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .identity-card,
-  .recognition-card {
-    min-height: 180px;
-  }
-
-  .journey-item {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .contact-layout {
-    margin-top: 52px;
-  }
-
-  .footer-top {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-brand {
-    grid-column: auto;
-  }
-
-  .footer-bottom {
-    align-items: flex-start;
-    flex-direction: column;
   }
 }

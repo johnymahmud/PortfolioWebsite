@@ -1,94 +1,105 @@
 /* =========================================================
-   Public Journal Page Styling
-   Sleek monochrome, responsive layout, rich typography
+   PUBLIC JOURNAL PAGE STYLING (MATCHING EXACT USER SCREENSHOTS)
+   Sleek Monochrome, Category Filters, Modern Reader Modal
    ========================================================= */
 
-.journal-hero {
-  padding: 6rem 2rem 3rem;
+.journal-page-main {
+  min-height: 100vh;
+  padding-bottom: 6rem;
+}
+
+.journal-hero-section {
   max-width: 1200px;
   margin: 0 auto;
-  border-bottom: 1px solid var(--border, #222);
+  padding: 6rem 2rem 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.journal-hero-inner {
-  max-width: 800px;
-}
-
-.journal-eyebrow {
+.section-subtitle {
   font-family: "DM Mono", monospace;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted, #888);
+  letter-spacing: 0.14em;
+  color: var(--muted, #9a9994);
+  display: block;
   margin-bottom: 1rem;
 }
 
-.journal-title {
-  font-family: "Manrope", sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: 1.1;
+.journal-hero-title {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.05;
   letter-spacing: -0.02em;
-  margin-bottom: 1.5rem;
-  color: var(--fg, #fff);
+  color: #ffffff;
+  margin-bottom: 1.2rem;
 }
 
-.journal-intro {
-  font-size: 1.15rem;
+.journal-hero-description {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
   line-height: 1.6;
-  color: var(--text-secondary, #ccc);
+  color: #9a9994;
+  max-width: 720px;
 }
 
-/* Categories Filter Bar */
-.journal-filter-section {
+/* Category Filter Pills */
+.journal-filter-container {
   max-width: 1200px;
-  margin: 2rem auto 0;
+  margin: 2.5rem auto 3.5rem;
   padding: 0 2rem;
 }
 
-.journal-categories {
+.journal-filter-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
-.journal-cat-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary, #aaa);
-  padding: 0.5rem 1.2rem;
+.journal-filter-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #c5c5c0;
+  padding: 0.55rem 1.25rem;
   border-radius: 100px;
   font-family: "DM Mono", monospace;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.journal-cat-btn:hover,
-.journal-cat-btn.is-active {
-  background: #fff;
-  color: #000;
-  border-color: #fff;
+.journal-filter-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Journal Grid */
+.journal-filter-pill.is-active {
+  background: #ffffff;
+  color: #0a0a0a;
+  border-color: #ffffff;
+  font-weight: 600;
+}
+
+/* Journal Grid Section */
 .journal-grid-section {
   max-width: 1200px;
-  margin: 3rem auto 6rem;
+  margin: 0 auto;
   padding: 0 2rem;
 }
 
 .journal-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 2rem;
 }
 
-/* Journal Article Card */
+/* Journal Article Card (Matching Image 1) */
 .journal-card {
-  background: rgba(255, 255, 255, 0.02);
+  background: #111111;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -98,66 +109,103 @@
 
 .journal-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
 
-.journal-card-cover {
+.journal-card-media {
   width: 100%;
-  height: 200px;
-  object-fit: cover;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  height: 220px;
+  overflow: hidden;
+  background: #171717;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.journal-card-body {
-  padding: 1.5rem;
+.journal-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.journal-card:hover .journal-card-media img {
+  transform: scale(1.04);
+}
+
+.journal-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1c1c20 0%, #0e0e11 100%);
+  color: rgba(255, 255, 255, 0.35);
+  font-family: "DM Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journal-card-content {
+  padding: 1.6rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.journal-card-meta {
-  font-family: "DM Mono", monospace;
-  font-size: 0.8rem;
-  color: var(--muted, #888);
-  margin-bottom: 0.75rem;
+.journal-card-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
 }
 
-.journal-card-badge {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  padding: 0.15rem 0.5rem;
+.journal-card-tag {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f3f1eb;
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
+.journal-card-date {
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: #888888;
+}
+
 .journal-card-title {
-  font-family: "Manrope", "Noto Sans Bengali", sans-serif;
+  font-family: "Noto Serif Bengali", "Playfair Display", Georgia, serif;
   font-size: 1.35rem;
   font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 0.75rem;
-  color: #fff;
+  line-height: 1.35;
+  color: #ffffff;
+  margin-bottom: 0.85rem;
 }
 
 .journal-card-excerpt {
   font-family: "Noto Sans Bengali", "Manrope", sans-serif;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: #bbb;
-  margin-bottom: 1.25rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #a0a09c;
+  margin-bottom: 1.4rem;
   flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .journal-card-link {
   font-family: "DM Mono", monospace;
-  font-size: 0.85rem;
-  color: #fff;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: #ffffff;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -168,113 +216,311 @@
   text-decoration: underline;
 }
 
-/* Empty State */
-.journal-empty {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: var(--muted, #888);
-  font-family: "DM Mono", monospace;
+/* Get in Touch CTA Section (Matching Image 1) */
+.journal-contact-section {
+  max-width: 1200px;
+  margin: 6rem auto 0;
+  padding: 4rem 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Article Modal */
-.journal-modal {
+.journal-contact-inner h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+}
+
+.journal-contact-inner p {
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  color: #9a9994;
+  margin-bottom: 1.8rem;
+}
+
+.journal-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  color: #0a0a0a;
+  padding: 0.75rem 1.6rem;
+  border-radius: 100px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+
+.journal-contact-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================================================
+   INTERNATIONAL STANDARD READER MODAL
+   ========================================================= */
+
+body.journal-reader-open {
+  overflow: hidden;
+}
+
+.journal-reader-modal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
 }
 
-.journal-modal[hidden] {
-  display: none;
-}
-
-.journal-modal-backdrop {
-  position: absolute;
+.journal-reader-backdrop {
+  position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 10, 10, 0.94);
+  backdrop-filter: blur(20px);
 }
 
-.journal-modal-content {
+.journal-reader-container {
   position: relative;
+  z-index: 10;
   width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
+  height: 100vh;
   overflow-y: auto;
-  background: #111;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  padding: 2.5rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  scroll-behavior: smooth;
+  color: #f3f1eb;
 }
 
-.journal-modal-close {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #fff;
+.journal-reader-progress {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: #ffffff;
+  z-index: 30;
+  transition: width 0.1s ease-out;
+}
+
+.journal-reader-header {
+  position: sticky;
+  top: 3px;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem clamp(1.5rem, 5vw, 4rem);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.journal-reader-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  color: #9a9994;
+}
+
+.journal-reader-tag {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.journal-reader-dot {
+  opacity: 0.4;
+}
+
+.journal-reader-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.journal-reader-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.journal-reader-action-btn:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+.journal-reader-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.journal-modal-close:hover {
-  background: rgba(255, 255, 255, 0.25);
+.journal-reader-close-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: rotate(90deg);
 }
 
-.journal-modal-meta {
-  font-family: "DM Mono", monospace;
-  font-size: 0.85rem;
-  color: #888;
-  margin-bottom: 1rem;
+/* Article Reader Typography & Formatting */
+.journal-reader-article {
+  max-width: 780px;
+  margin: 3.5rem auto 6rem;
+  padding: 0 1.8rem;
 }
 
-.journal-modal-title {
-  font-family: "Manrope", "Noto Sans Bengali", sans-serif;
-  font-size: 2.2rem;
-  font-weight: 800;
-  line-height: 1.2;
-  color: #fff;
-  margin-bottom: 1.5rem;
-}
-
-.journal-modal-cover {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 8px;
+.journal-reader-title {
+  font-family: "Noto Serif Bengali", "Playfair Display", Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: #ffffff;
   margin-bottom: 2rem;
 }
 
-.journal-modal-body {
+.journal-reader-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 2.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 2.5rem;
+}
+
+.author-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent, #ff3b30);
+  color: #ffffff;
+  font-family: "DM Mono", monospace;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author-name {
+  font-family: "Manrope", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.author-role {
+  font-family: "DM Mono", monospace;
+  font-size: 0.72rem;
+  color: #9a9994;
+  margin: 0.2rem 0 0;
+}
+
+.journal-reader-hero-media {
+  margin: 0 0 2.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.journal-reader-hero-media img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+.journal-reader-lead {
   font-family: "Noto Sans Bengali", "Manrope", sans-serif;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: #ddd;
-}
-
-.journal-modal-body img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin: 1.5rem 0;
-}
-
-.journal-modal-body blockquote {
-  border-left: 3px solid #fff;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: #e2e0d8;
+  font-weight: 500;
+  margin-bottom: 2.2rem;
   padding-left: 1.2rem;
-  margin: 1.5rem 0;
+  border-left: 3px solid var(--accent, #ff3b30);
+}
+
+.journal-reader-content {
+  font-family: "Noto Sans Bengali", "Manrope", sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: #d1cfc7;
+}
+
+.journal-reader-content h2,
+.journal-reader-content h3 {
+  font-family: "Noto Serif Bengali", "Playfair Display", Georgia, serif;
+  color: #ffffff;
+  margin: 2.5rem 0 1rem;
+  font-weight: 600;
+}
+
+.journal-reader-content h2 {
+  font-size: 1.8rem;
+  line-height: 1.25;
+}
+
+.journal-reader-content h3 {
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
+.journal-reader-content p {
+  margin-bottom: 1.6rem;
+}
+
+.journal-reader-content blockquote {
+  border-left: 3px solid #ffffff;
+  padding: 0.8rem 0 0.8rem 1.5rem;
+  margin: 2rem 0;
   font-style: italic;
-  color: #ccc;
+  color: #f3f1eb;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 8px 8px 0;
+}
+
+.journal-reader-content img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.journal-reader-footer {
+  margin-top: 4.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.journal-reader-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-tagline {
+  font-family: "DM Mono", monospace;
+  font-size: 0.8rem;
+  color: #9a9994;
+  margin: 0;
 }

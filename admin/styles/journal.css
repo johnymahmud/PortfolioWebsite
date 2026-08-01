@@ -355,8 +355,10 @@
 }
 
 .journal-editor-panel {
-  position: relative;
-  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
   width: min(920px, 100vw);
   height: 100vh;
   padding: 2.5rem 3rem 4rem;

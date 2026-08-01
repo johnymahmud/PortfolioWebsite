@@ -16,3 +16,4 @@ dist/
 
 # Local media exports — keep original high-resolution files outside the repo
 assets/source/
+.next/
