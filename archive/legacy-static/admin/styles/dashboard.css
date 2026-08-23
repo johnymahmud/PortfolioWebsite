@@ -1,0 +1,217 @@
+/* =========================================================
+   Admin Dashboard CSS Module
+   ========================================================= */
+
+.dashboard {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 0 7rem;
+}
+
+.dashboard-header,
+.dashboard-summary,
+.dashboard-section-heading,
+.dashboard-project-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.dashboard-header {
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-header-actions a,
+.dashboard-header-actions button,
+#new-project-button,
+.dashboard-project-actions button {
+  min-height: 42px;
+  padding: 0 1.2rem;
+  border-radius: 8px;
+  color: #f4f4f5;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 180ms ease;
+}
+
+.dashboard-header-actions button:hover,
+.dashboard-header-actions a:hover,
+.dashboard-project-actions button:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dashboard-summary {
+  margin-top: 3.5rem;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  background: #121215;
+}
+
+.dashboard-summary span,
+.dashboard-project-category,
+.dashboard-project-details,
+.dashboard-section-heading > p {
+  color: #a1a1aa;
+  font-family: "DM Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dashboard-summary h2 {
+  max-width: 780px;
+  margin: 1rem 0 0;
+  font-size: clamp(1.5rem, 2.8vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+#new-project-button {
+  flex: 0 0 auto;
+  color: #09090b;
+  border-color: #f4f4f5;
+  background: #f4f4f5;
+  font-weight: 600;
+}
+
+#new-project-button:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+.dashboard-projects {
+  margin-top: 5rem;
+}
+
+.dashboard-section-heading {
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.dashboard-section-heading h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-status {
+  padding: 3rem 0;
+  color: #a1a1aa;
+  font-size: 0.9rem;
+}
+
+.dashboard-project-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.dashboard-project-item {
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #121215;
+  transition: all 180ms ease;
+}
+
+.dashboard-project-item:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.dashboard-project-image {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 80px;
+  display: grid;
+  place-items: center;
+  color: #71717a;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dashboard-project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboard-project-content {
+  flex: 1;
+}
+
+.dashboard-project-content h3 {
+  margin: 0.35rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.dashboard-project-category,
+.dashboard-project-details {
+  margin: 0;
+}
+
+.dashboard-project-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.dashboard-project-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+@media (max-width: 760px) {
+  .dashboard {
+    width: 100%;
+  }
+
+  .dashboard-header,
+  .dashboard-summary,
+  .dashboard-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-project-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-project-image {
+    flex-basis: 100%;
+    width: 100%;
+    height: 200px;
+  }
+
+  .dashboard-project-actions {
+    width: 100%;
+  }
+}

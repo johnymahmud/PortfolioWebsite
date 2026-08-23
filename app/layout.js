@@ -5,7 +5,7 @@ import '../styles/responsive.css';
 import '../styles/homepage.css';
 import '../styles/work.css';
 import '../styles/journal-public.css';
-import '../admin/admin.css';
+import '../styles/admin/admin.css';
 
 export const metadata = {
   title: 'Shah Mahmud — Visual Artist & Art Director',
