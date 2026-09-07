@@ -1,41 +1,80 @@
 # 🤖 AI Agent Vibecoding Protocol & Workflow Guidelines
 
 **Target Agent:** Antigravity / Gemini / AI Pair Programmers  
-**Scope:** `f:\Vibecoding\Portfolio\PortfolioWebsite`  
+**Scope:** `PortfolioWebsite` (Cross-PC Workspace: `d:\Personal\PortfolioWebsite` / `f:\Vibecoding\...`)  
+**Current Active Branch:** `feat/modular-cms-architecture-v3`  
 
 ---
 
-## 📜 1. Core Vibecoding Rules
+## 📜 1. Core Vibecoding Rules & Governance Principles
 
-1. **Strict Step-by-Step Workflow (Plan ➔ Implement ➔ Test ➔ Commit):**
-   - **Plan:** Analyze requirements, check documentation in `documentation/`, and outline proposed changes.
-   - **Implement:** Write clean, modular code obeying the design system.
-   - **Test:** Verify code execution on local dev server (`http://localhost:3000`).
-   - **Commit:** Commit verified changes cleanly to Git branch `home-nextJsSetup`.
+### 🔍 Rule 1: Mandatory Pre-Task Session Deep Audit (বাধ্যতামূলক প্রি-টাস্ক অডিট)
+- **প্রতি সেশনে কাজ শুরুর প্রথম ধাপ:** কোনো কাজ প্রস্তাব বা শুরু করার আগে এজেন্টকে অবশ্যই:
+  1. প্রজেক্টের সম্পূর্ণ কোডবেস, ফাইল স্ট্রাকচার, ডিপেনডেনসি এবং বর্তমান আর্কিটেকচার গভীর অডিট করতে হবে।
+  2. `documentation/` ফোল্ডারের মেমোরি কিটের প্রতিটি মার্কডাউন ফাইল (`01-master-blueprint.md`, `ARCHITECTURE_SYSTEM_DESIGN.md`, `CURRENT_STATE.md`, `DATABASE_SCHEMA.md`, `ROADMAP_NEXT_STEPS.md` ইত্যাদি) লাইন-বাই-লাইন মনোযোগ দিয়ে পড়তে হবে।
+  3. বর্তমান গিট ব্রাঞ্চ ও স্ট্যাটাস যাচাই করতে হবে।
+- **উদ্দেশ্য:** যাতে কোনো এজেন্ট প্রজেক্টের কনটেক্সট ভুলে না যায়, হ্যালুসিনেশন না করে, আগে সম্পন্ন করা কোনো ফাংশন বা টেবিল নতুন করে রি-রাইট না করে এবং কোড ডুপ্লিকেশন না ঘটায়।
 
-2. **Never Guess Schemas or Paths:**
-   - Always inspect `documentation/DATABASE_SCHEMA.md` and `documentation/ARCHITECTURE_SYSTEM_DESIGN.md` before querying Supabase or importing components.
+---
 
-3. **No Superficial Symptom Patches:**
-   - Always fix the root cause of an error. Inspect full task/error logs before forming a diagnostic hypothesis.
+### 🛑 Rule 2: Strict Human Permission-First Governance (কোড, গিট ও ডকুমেন্টেশনে পূর্ণ অনুমতি-নির্ভর প্রটোকল)
+1. **No Autonomous Markdown / Documentation Edits (অনুমতি ছাড়া ডকুমেন্টেশন এডিট নিষিদ্ধ):**
+   - কোনো প্রশ্ন করা হলে এজেন্ট শুধুমাত্র ব্যাখ্যা, বিশ্লেষণ ও উত্তর প্রদান করবে। ব্যবহারকারীর অনুমোদন ছাড়া কোনো `.md` বা ডকুমেন্টেশন ফাইল নিজে থেকে পরিবর্তন বা আপডেট করা সম্পূর্ণ নিষিদ্ধ।
+2. **Mandatory Action Plan & Proceed Permission (কাজের পূর্বে বিস্তারিত প্ল্যান ও লিখিত অনুমতি):**
+   - যেকোনো কোডবেজ বা ডকুমেন্টেশন পরিবর্তনের আগে এজেন্টকে বিস্তারিত অ্যাকশন প্ল্যান উপস্থাপন করতে হবে:
+     - **কী কী পরিবর্তনের প্রস্তাব করা হচ্ছে?** (Scope of Changes)
+     - **কেন করা হচ্ছে?** (Rationale / Why)
+     - **এই পরিবর্তনে কী কী সুবিধা হবে?** (Benefits / Pros)
+     - **কী কী সম্ভাব্য ঝুঁকি বা অসুবিধা হতে পারে?** (Risks / Cons / Trade-offs)
+   - এরপর ব্যবহারকারীর কাছ থেকে স্পষ্ট **"Proceed Permission"** চাইতে হবে। ব্যবহারকারী লিখিত অনুমতি দিলে তবেই এবং কেবল অনুমোদিত পরিধির মধ্যে কাজ করা যাবে।
+3. **No Autonomous Code Changes (অনুমতি ছাড়া কোড পরিবর্তন নয়):**
+   - ব্যবহারকারীর অনুমতি ছাড়া কোনো কম্পোনেন্ট, রুট, স্টাইল বা স্ক্রিপ্ট ফাইলে কোনো পরিবর্তন বা নতুন ফাইল তৈরি করা যাবে না।
+4. **No Autonomous Push (অনুমতি ছাড়া কখনোই গিট পুশ নয়):**
+   - ব্যবহারকারীর সরাসরি ও সুস্পষ্ট নির্দেশ ("পুশ করো") ছাড়া কোনো অবস্থাতেই AI এজেন্ট `git push` এক্সিকিউট করতে পারবে না।
+5. **No Autonomous Branching (অনুমতি ছাড়া ব্রাঞ্চ তৈরি নয়):**
+   - ব্যবহারকারীর অনুমতি ছাড়া কোনো নতুন গিট ব্রাঞ্চ খোলা বা সুইচ করা যাবে না।
+6. **No Autonomous Commit (কমিট করার আগে রিভিউ):**
+   - কোড পরিবর্তন ও লোকাল ভেরিফিকেশন শেষ হলে এজেন্ট কাজ থামাবে, পরিবর্তনের বিস্তারিত সামারি ব্যবহারকারীকে দেখাবে এবং ব্যবহারকারী "কমিট করো" বললে কেবল তখনই `git commit` করবে।
+7. **Strict Scope Confinement:**
+   - ব্যবহারকারী যতটুকু নির্দেশ দেবেন এবং প্ল্যানে অনুমোদন করবেন, ঠিক ততটুকুই করতে হবে। কোনো অতিরিক্ত কাজ বা অপ্রত্যাশিত ফাইল পরিবর্তন করা সম্পূর্ণ নিষিদ্ধ।
 
-4. **Zero Downtime Migration Policy:**
-   - Never delete existing working files until new Next.js routes are 100% verified and working.
+---
+
+### 📚 Rule 3: Continuous Documentation & Memory Synchronization (মেমোরি কিট সিঙ্ক)
+- প্রতি সেশনে যেকোনো কাজ (ফিচার যুক্ত করা, কোড রিফ্যাক্টর করা, স্কিমা আপডেট করা, কোনো অংশ বাদ দেওয়া) শেষ করার সাথে সাথে `documentation/` ফোল্ডারের মেমোরি কিটের সংশ্লিষ্ট সকল মার্কডাউন ফাইল অবিলম্বে আপডেট করতে হবে।
+- কোডবেসের বাস্তব রূপ এবং মেমোরি কিটের বিবরণ সবসময় ১০০% মিল থাকতে হবে।
+
+---
+
+### 🧩 Rule 4: Never Guess Schemas or Paths
+- সুপাবেজ ডাটাবেস কোয়েরি বা নতুন কম্পোনেন্ট ইম্পোর্ট করার আগে সর্বদা `documentation/DATABASE_SCHEMA.md` এবং `documentation/ARCHITECTURE_SYSTEM_DESIGN.md` মিলিয়ে নিতে হবে। অনুমানের ওপর ভিত্তি করে কোনো টেবিল, কলাম বা পাথ ব্যবহার করা যাবে না।
+
+---
+
+### 🛠️ Rule 5: Root Cause Resolution (সিম্পটম প্যাচ নয়)
+- কোনো এরর দেখা দিলে কেবল ওপরের সমস্যা লুকিয়ে ফেলার বদলে এররের মূল কারণ (Root Cause) এবং সম্পূর্ণ লগ ফাইল তদন্ত করে টেকসই সমাধান করতে হবে।
+
+---
+
+### 🛡️ Rule 6: Zero Downtime & Public Aesthetic Integrity
+- কোনো নতুন ফিচার বা রুট যোগ করার সময় বিদ্যমান লাইভ পেইজ বা ফিচার ভাঙা যাবে না।
+- পাবলিক ফ্রন্টএন্ডে কোনো অ্যাডমিন বাটন বা কনফিউজিং এলিমেন্ট রাখা যাবে না; এটি সর্বদা ক্লিন, আন্তর্জাতিক মানের এডিটোরিয়াল আর্ট পোর্টফোলিও হিসেবে থাকবে।
 
 ---
 
 ## 💬 2. Communication Style
 
-- **Language:** Respond in clear, professional Bengali (বাংলা) as requested by the user, while keeping code and documentation terms formatted cleanly in markdown.
-- **Conciseness:** Keep responses structured, concise, and highlight open questions or action items directly.
-- **File Links:** Always format clickable file links using GitHub-style `file:///` URLs.
+- **ভাষা:** ব্যবহারকারীর নির্দেশনা অনুযায়ী সবসময় স্পষ্ট, প্রফেশনাল ও সহজবোধ্য বাংলায় (Bengali) রেসপন্স প্রদান করতে হবে। কোড, ফাইল ও টেকনিক্যাল টার্ম ক্লিন মার্কডাউনে থাকবে।
+- **সংক্ষিপ্ততা ও স্বচ্ছতা:** রেসপন্স সুসংগঠিত রাখতে হবে, অপ্রয়োজনীয় বাহুল্য বর্জন করে কাজের মূল বিষয় এবং সিদ্ধান্ত সরাসরি তুলে ধরতে হবে।
+- **ক্লিকেবল ফাইল লিংক:** প্রতিটি ফাইল ও কোড রেফারেন্সের জন্য গিটহাব স্টাইলের ক্লিকেবল `file:///` লিংক ব্যবহার করতে হবে।
 
 ---
 
 ## ✅ 3. Verification Checklist
 
-Before declaring any feature complete:
-- [ ] Run build or check live dev server on `http://localhost:3000`.
-- [ ] Verify HTTP response status (200 OK).
-- [ ] Inspect task/server logs for any uncaught runtime errors.
-- [ ] Update `documentation/CURRENT_STATE.md` to reflect newly verified routes or features.
+যেকোনো ফিচার সম্পন্ন ঘোষণা করার পূর্বে:
+- [ ] লোকাল ডেভেলপমেন্ট সার্ভারে (`http://localhost:3000`) পেজ ও API টেস্ট করা।
+- [ ] HTTP রেসপন্স স্ট্যাটাস (200 OK) নিশ্চিত করা।
+- [ ] টার্মিনাল ও সার্ভার টাস্ক লগে কোনো আনহ্যান্ডেল্ড এরর নেই তা যাচাই করা।
+- [ ] `documentation/CURRENT_STATE.md` এবং সংশ্লিষ্ট সকল ডক ফাইল সিঙ্ক করা।
+- [ ] ব্যবহারকারীকে পরিবর্তনের সামারি দেখিয়ে পরবর্তী আদেশের জন্য অপেক্ষা করা (অনুমতি ছাড়া পুশ/কমিট না করা)।
