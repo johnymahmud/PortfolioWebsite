@@ -63,17 +63,90 @@ Stores admin user permissions.
 
 ---
 
+### Table 4: `public.reactions`
+Stores anonymous, rate-limited visitor reactions/likes across projects and journals.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | Primary Key, `gen_random_uuid()` | Unique reaction ID |
+| `target_type` | `TEXT` | `NOT NULL` (`project` / `journal`) | Target resource type |
+| `target_id` | `UUID` | `NOT NULL` | Foreign ID of project or journal |
+| `reaction_type` | `TEXT` | Default: `'heart'` | Reaction identifier (`heart`, `clap`) |
+| `ip_hash` | `TEXT` | `NOT NULL` | SHA-256 salted hash of visitor IP for rate-limiting |
+| `created_at` | `TIMESTAMPTZ`| Default: `NOW()` | Reaction timestamp |
+
+---
+
+### Table 5: `public.comments`
+Stores guest/visitor comments with moderation workflow and anti-spam protection.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | Primary Key, `gen_random_uuid()` | Unique comment ID |
+| `target_type` | `TEXT` | `NOT NULL` (`project` / `journal`) | Target resource type |
+| `target_id` | `UUID` | `NOT NULL` | Foreign ID of project or journal |
+| `author_name` | `TEXT` | `NOT NULL` | Display name of the commenter |
+| `author_email` | `TEXT` | Optional | Email for avatar / moderation (never public) |
+| `content` | `TEXT` | `NOT NULL` | Comment body text |
+| `status` | `TEXT` | Default: `'pending'` | Moderation status (`pending`, `approved`, `rejected`) |
+| `ip_hash` | `TEXT` | Optional | Visitor IP hash for spam filtering |
+| `created_at` | `TIMESTAMPTZ`| Default: `NOW()` | Submission timestamp |
+| `approved_at` | `TIMESTAMPTZ`| Optional | Moderation approval timestamp |
+
+---
+
+### Table 6: `public.share_logs`
+Tracks analytics events whenever a visitor shares an artwork or journal article.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | Primary Key, `gen_random_uuid()` | Unique share log ID |
+| `target_type` | `TEXT` | `NOT NULL` (`project` / `journal`) | Target resource type |
+| `target_id` | `UUID` | `NOT NULL` | Foreign ID of project or journal |
+| `platform` | `TEXT` | `NOT NULL` | Target channel (`whatsapp`, `linkedin`, `facebook`, `copy_link`) |
+| `created_at` | `TIMESTAMPTZ`| Default: `NOW()` | Share timestamp |
+
+---
+
+### Table 7: `public.admin_notifications`
+Central event hub for all live notifications delivered to the Admin CMS.
+
+| Column Name | Data Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | Primary Key, `gen_random_uuid()` | Unique notification ID |
+| `type` | `TEXT` | `NOT NULL` | Notification category (`comment`, `reaction`, `share`, `contact`) |
+| `title` | `TEXT` | `NOT NULL` | Short title (e.g. "New Comment Pending") |
+| `message` | `TEXT` | `NOT NULL` | Detail description of the action |
+| `target_url` | `TEXT` | Optional | Quick link to moderate or view the item |
+| `is_read` | `BOOLEAN` | Default: `false` | Read status flag |
+| `created_at` | `TIMESTAMPTZ`| Default: `NOW()` | Notification generation timestamp |
+
+---
+
 ## 📦 2. Storage Bucket Specification
 
 - **Bucket Name:** `portfolio-assets`
 - **Public Access:** `true` (Public URL generation enabled)
 - **Allowed Operations:** 
   - `SELECT`: Public access allowed.
-  - `INSERT / UPDATE / DELETE`: Permissive upload policy for project and journal assets.
+  - `INSERT / UPDATE / DELETE`: Restricted to authenticated admin sessions.
 
 ---
 
-## 🔒 3. Row Level Security (RLS) & SQL Indexes
+## 🔒 3. Row Level Security (RLS) & Performance Indexes
 
-- Indexes on `public.journal_posts(slug)` and `public.journal_posts(status)` for optimal query speeds.
-- Row Level Security (RLS) enabled on all tables.
+### Indexes:
+- `idx_journal_posts_slug` ON `journal_posts(slug)`
+- `idx_journal_posts_status` ON `journal_posts(status)`
+- `idx_reactions_target` ON `reactions(target_type, target_id)`
+- `idx_reactions_ip_target` ON `reactions(target_type, target_id, ip_hash)`
+- `idx_comments_target_status` ON `comments(target_type, target_id, status)`
+- `idx_notifications_unread` ON `admin_notifications(is_read, created_at)`
+
+### RLS Policies:
+- **`projects` & `journal_posts`:** Public `SELECT` for published items. Authenticated Admin only for `INSERT`, `UPDATE`, `PATCH`, `DELETE`.
+- **`reactions`:** Public `INSERT` (rate-limited via API); Public `SELECT` aggregated counts; Admin full access.
+- **`comments`:** Public `INSERT` (sets `status='pending'`); Public `SELECT` only where `status='approved'`; Admin full read & update moderation rights.
+- **`share_logs`:** Public `INSERT` (logging pings); Admin only `SELECT`.
+- **`admin_notifications`:** Authenticated Admin only `SELECT`, `UPDATE` (`is_read`), `DELETE`.
+

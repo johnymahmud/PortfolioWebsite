@@ -54,7 +54,6 @@ export default function JournalPage() {
           <Link href="/">Home</Link>
           <Link href="/work">See My Work</Link>
           <Link href="/journal" className="is-active">Journal</Link>
-          <Link href="/admin">CMS Admin</Link>
         </nav>
       </header>
 

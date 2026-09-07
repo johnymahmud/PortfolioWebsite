@@ -19,7 +19,6 @@ export default function WorkPage() {
           <Link href="/work" className="is-active">See My Work</Link>
           <Link href="/journal">Journal</Link>
           <a href="/#contact">Contact</a>
-          <Link href="/admin" className="admin-nav-link">CMS Admin</Link>
         </nav>
       </header>
 

@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ReactionButton from '@/components/engagement/ReactionButton';
+import ShareToolbar from '@/components/engagement/ShareToolbar';
+import CommentSection from '@/components/engagement/CommentSection';
 
 export default function JournalReaderModal({ post, onClose }) {
   const [copied, setCopied] = useState(false);
@@ -69,7 +72,8 @@ export default function JournalReaderModal({ post, onClose }) {
             <span className="journal-reader-time">⏱ {readTime} min read</span>
           </div>
 
-          <div className="journal-reader-header-actions">
+          <div className="journal-reader-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <ReactionButton targetType="journal" targetId={post.id} targetTitle={post.title} />
             <button
               type="button"
               className="journal-reader-action-btn"
@@ -125,6 +129,12 @@ export default function JournalReaderModal({ post, onClose }) {
               <p>{post.excerpt}</p>
             </div>
           )}
+
+          <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <ShareToolbar targetType="journal" targetId={post.id} targetTitle={post.title} />
+          </div>
+
+          <CommentSection targetType="journal" targetId={post.id} targetTitle={post.title} />
 
           <footer className="journal-reader-footer">
             <div className="journal-reader-footer-inner">

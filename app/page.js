@@ -28,7 +28,6 @@ export default function HomePage() {
           <Link href="/journal">Journal</Link>
           <a href="#identity">Identity</a>
           <a href="#contact">Contact</a>
-          <Link href="/admin" className="admin-nav-link">CMS Admin</Link>
         </nav>
       </header>
 

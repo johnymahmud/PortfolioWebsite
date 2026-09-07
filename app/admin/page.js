@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import AdminNotificationBell from '@/components/admin/AdminNotificationBell';
 import { supabase } from '@/lib/supabase/client';
 import { fetchProjects, createProject, updateProject, deleteProject, uploadProjectAsset } from '@/lib/supabase/projects';
 import { fetchJournals, createJournal, updateJournal, deleteJournal, uploadJournalAsset } from '@/lib/supabase/journals';
@@ -54,6 +55,8 @@ export default function AdminDashboardPage() {
     is_featured: false,
   });
 
+  const [comments, setComments] = useState([]);
+
   useEffect(() => {
     loadData();
   }, [activeTab, activeTerritory]);
@@ -64,9 +67,13 @@ export default function AdminDashboardPage() {
       if (activeTab === 'projects') {
         const data = await fetchProjects({ territory: activeTerritory, isPublishedOnly: false });
         setProjects(data);
-      } else {
+      } else if (activeTab === 'journals') {
         const data = await fetchJournals({ status: 'all' });
         setJournals(data);
+      } else if (activeTab === 'comments') {
+        const res = await fetch('/api/v1/comments?status=all');
+        const json = await res.json();
+        setComments(json.data || []);
       }
     } catch (err) {
       console.error('Error loading admin data:', err);
@@ -74,6 +81,29 @@ export default function AdminDashboardPage() {
       setLoading(false);
     }
   }
+
+  const handleModerateComment = async (id, status) => {
+    try {
+      await fetch('/api/v1/comments', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      setComments((prev) => prev.map((c) => (c.id === id ? { ...c, status } : c)));
+    } catch (err) {
+      console.error('Error moderating comment:', err);
+    }
+  };
+
+  const handleDeleteComment = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this comment?')) return;
+    try {
+      await fetch(`/api/v1/comments?id=${id}`, { method: 'DELETE' });
+      setComments((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      console.error('Error deleting comment:', err);
+    }
+  };
 
   const handleOpenModal = (item = null) => {
     setFormMessage('');
@@ -243,6 +273,13 @@ export default function AdminDashboardPage() {
           >
             Journal
           </a>
+          <a
+            href="#"
+            className={activeTab === 'comments' ? 'is-active' : ''}
+            onClick={(e) => { e.preventDefault(); setActiveTab('comments'); }}
+          >
+            💬 Comments Moderation
+          </a>
           <Link href="/" target="_blank" rel="noopener noreferrer">
             View Website ↗
           </Link>
@@ -258,22 +295,35 @@ export default function AdminDashboardPage() {
         <header className="admin-page-header">
           <div>
             <p className="admin-page-eyebrow">Content Management</p>
-            <h1>{activeTab === 'projects' ? 'See My Work Projects' : 'Journal'}</h1>
+            <h1>
+              {activeTab === 'projects'
+                ? 'See My Work Projects'
+                : activeTab === 'journals'
+                ? 'Journal'
+                : 'Visitor Comments Moderation'}
+            </h1>
             <p>
               {activeTab === 'projects'
                 ? 'Upload, publish, edit, and organize selected works across Fine Arts, Professional Works, and Passion Works.'
-                : 'Create, edit and publish articles, essays, poetry, stories and personal journal entries.'}
+                : activeTab === 'journals'
+                ? 'Create, edit and publish articles, essays, poetry, stories and personal journal entries.'
+                : 'Review, approve, reject, or delete visitor comments across all artworks and essays.'}
             </p>
           </div>
 
-          <button
-            type="button"
-            id="new-project-button"
-            className="admin-primary-button"
-            onClick={() => handleOpenModal(null)}
-          >
-            + {activeTab === 'projects' ? 'Add New Project' : 'New Journal Post'}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <AdminNotificationBell onSelectNotification={() => setActiveTab('comments')} />
+            {activeTab !== 'comments' && (
+              <button
+                type="button"
+                id="new-project-button"
+                className="admin-primary-button"
+                onClick={() => handleOpenModal(null)}
+              >
+                + {activeTab === 'projects' ? 'Add New Project' : 'New Journal Post'}
+              </button>
+            )}
+          </div>
         </header>
 
         {loading && (
@@ -330,8 +380,20 @@ export default function AdminDashboardPage() {
         <section className="admin-content-section">
           <div className="admin-section-heading">
             <div>
-              <h2>{activeTab === 'projects' ? 'Portfolio Works' : 'Journal Posts'}</h2>
-              <p>{activeTab === 'projects' ? 'johnymahmud@gmail.com' : `${journals.length} posts`}</p>
+              <h2>
+                {activeTab === 'projects'
+                  ? 'Portfolio Works'
+                  : activeTab === 'journals'
+                  ? 'Journal Posts'
+                  : 'Submitted Visitor Comments'}
+              </h2>
+              <p>
+                {activeTab === 'projects'
+                  ? 'johnymahmud@gmail.com'
+                  : activeTab === 'journals'
+                  ? `${journals.length} posts`
+                  : `${comments.length} total comments`}
+              </p>
             </div>
           </div>
 
@@ -376,13 +438,13 @@ export default function AdminDashboardPage() {
                 </article>
               ))}
             </div>
-          ) : (
+          ) : activeTab === 'journals' ? (
             <div className="dashboard-project-list">
               {journals.map((journal) => (
                 <article key={journal.id} className="dashboard-project-item">
                   <div className="dashboard-project-image">
-                    {journal.cover_image_url ? (
-                      <img src={journal.cover_image_url} alt={journal.title} />
+                    {journal.cover_image_url || journal.cover_image ? (
+                      <img src={journal.cover_image_url || journal.cover_image} alt={journal.title} />
                     ) : (
                       <span>No Media</span>
                     )}
@@ -416,6 +478,76 @@ export default function AdminDashboardPage() {
                   </div>
                 </article>
               ))}
+            </div>
+          ) : (
+            <div className="dashboard-comments-moderation-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {comments.length === 0 ? (
+                <p style={{ color: '#71717a', padding: '2rem', textAlign: 'center' }}>No visitor comments recorded yet.</p>
+              ) : (
+                comments.map((comment) => (
+                  <article key={comment.id} style={{ background: '#18181b', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '8px', padding: '1.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
+                      <div>
+                        <strong style={{ color: '#f4f4f5', fontSize: '0.95rem' }}>{comment.author_name}</strong>
+                        {comment.author_email && (
+                          <span style={{ color: '#a1a1aa', fontSize: '0.8rem', marginLeft: '0.5rem' }}>({comment.author_email})</span>
+                        )}
+                        <span style={{ color: '#71717a', fontSize: '0.75rem', marginLeft: '0.75rem' }}>
+                          Target: {comment.target_type}
+                        </span>
+                      </div>
+                      <div>
+                        <span style={{
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          background: comment.status === 'approved' ? 'rgba(16,185,129,0.15)' : comment.status === 'pending' ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)',
+                          color: comment.status === 'approved' ? '#6ee7b7' : comment.status === 'pending' ? '#fcd34d' : '#fca5a5',
+                        }}>
+                          {comment.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p style={{ color: '#d4d4d8', fontSize: '0.9rem', lineHeight: '1.5', margin: '0.5rem 0 1rem 0' }}>
+                      {comment.content}
+                    </p>
+
+                    <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                      {comment.status !== 'approved' && (
+                        <button
+                          type="button"
+                          className="admin-secondary-button"
+                          style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.4)', padding: '0.35rem 0.85rem', fontSize: '0.8rem' }}
+                          onClick={() => handleModerateComment(comment.id, 'approved')}
+                        >
+                          ✓ Approve & Publish
+                        </button>
+                      )}
+                      {comment.status !== 'rejected' && (
+                        <button
+                          type="button"
+                          className="admin-secondary-button"
+                          style={{ color: '#fb7185', borderColor: 'rgba(251,113,133,0.4)', padding: '0.35rem 0.85rem', fontSize: '0.8rem' }}
+                          onClick={() => handleModerateComment(comment.id, 'rejected')}
+                        >
+                          ✗ Reject
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="admin-danger-button"
+                        style={{ padding: '0.35rem 0.85rem', fontSize: '0.8rem', marginLeft: 'auto' }}
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
             </div>
           )}
         </section>

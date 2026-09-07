@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import ReactionButton from '@/components/engagement/ReactionButton';
+import ShareToolbar from '@/components/engagement/ShareToolbar';
+import CommentSection from '@/components/engagement/CommentSection';
 
 /**
  * Robust YouTube Embed URL Extractor
@@ -117,9 +120,12 @@ export default function ProjectViewerModal({ project, onClose }) {
         )}
 
         <div className="project-viewer-content">
-          <span className="viewer-category">
-            {(project.category || 'Selected Work').toUpperCase()}
-          </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', gap: '1rem' }}>
+            <span className="viewer-category" style={{ margin: 0 }}>
+              {(project.category || 'Selected Work').toUpperCase()}
+            </span>
+            <ReactionButton targetType="project" targetId={project.id} targetTitle={project.title} />
+          </div>
 
           <h2>{project.title}</h2>
 
@@ -190,6 +196,12 @@ export default function ProjectViewerModal({ project, onClose }) {
               </span>
             )}
           </div>
+
+          <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <ShareToolbar targetType="project" targetId={project.id} targetTitle={project.title} />
+          </div>
+
+          <CommentSection targetType="project" targetId={project.id} targetTitle={project.title} />
         </div>
       </div>
     </div>

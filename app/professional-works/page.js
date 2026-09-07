@@ -18,7 +18,6 @@ export default function ProfessionalWorksPage() {
           <Link href="/">Home</Link>
           <Link href="/work" className="is-active">See My Work</Link>
           <Link href="/journal">Journal</Link>
-          <Link href="/admin">CMS Admin</Link>
         </nav>
       </header>
 
