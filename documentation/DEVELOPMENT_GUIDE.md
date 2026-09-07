@@ -69,15 +69,18 @@ All REST endpoints return uniform JSON responses:
 - **Journals:** `GET /api/v1/journals`, `POST /api/v1/journals`, `GET /api/v1/journals/:slug`, `PUT /api/v1/journals/:slug`, `PATCH /api/v1/journals/:slug`, `DELETE /api/v1/journals/:slug`
 - **Reactions (Likes):** `GET /api/v1/reactions?target_type=project&target_id=...`, `POST /api/v1/reactions`
 - **Comments:** `GET /api/v1/comments?target_type=...&target_id=...`, `POST /api/v1/comments` (Guest with Honeypot), `PATCH /api/v1/comments` (Approve/Reject), `DELETE /api/v1/comments?id=...`
-- **Shares:** `GET /api/v1/analytics/share`, `POST /api/v1/analytics/share`
+- **Shares & Analytics:** `GET /api/v1/analytics/share`, `POST /api/v1/analytics/share`, `GET /api/v1/analytics/overview` (Totals, Platform shares, and Item metrics)
 - **Notifications:** `GET /api/v1/notifications`, `PATCH /api/v1/notifications` (Mark read), `DELETE /api/v1/notifications?id=...`
 
 ---
 
-## 🛑 6. Strict AI Agent & Developer Governance Protocol
+## 🛑 6. Strict Human Permission-First Governance Protocol
 
 1. **Pre-Task Deep Audit:** Every session must begin by reviewing all markdown files in `documentation/` before proposing or writing code.
-2. **No Autonomous Push:** Never run `git push` without explicit, typed human confirmation.
-3. **No Autonomous Branching:** Never create or switch branches without explicit user instruction.
-4. **Pre-Commit Review:** Always summarize changes and await approval before running `git commit`.
-5. **Continuous Documentation Sync:** Always update `documentation/` markdown files at the conclusion of any architectural change.
+2. **No Autonomous Documentation Edits:** Never edit markdown files autonomously; always answer questions and request permission first.
+3. **Mandatory Plan & Pre-Permission:** Always outline Scope, Rationale, Pros, Cons/Risks and obtain explicit proceed permission before executing code changes.
+4. **No Autonomous Code Changes:** Never modify codebase components without user authorization.
+5. **No Autonomous Push:** Never run `git push` without explicit, typed human confirmation.
+6. **No Autonomous Branching:** Never create or switch branches without explicit user instruction.
+7. **Pre-Commit Review:** Always summarize changes and await approval before running `git commit`.
+8. **Continuous Documentation Sync:** Always update `documentation/` markdown files at the conclusion of any architectural change before commit.

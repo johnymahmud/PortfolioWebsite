@@ -207,4 +207,191 @@ textarea {
   padding: 2rem;
   text-align: center;
   margin: 0;
-}
+}
+
+/* =========================================================
+   Admin Engagement & KPI Stats Cards
+   ========================================================= */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.admin-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+}
+
+.stat-icon-reactions { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+.stat-icon-comments { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.stat-icon-shares { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.stat-icon-works { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.stat-subtext {
+  font-size: 0.72rem;
+  color: #f59e0b;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   Item Engagement Badges (in Projects & Journal Lists)
+   ========================================================= */
+.admin-item-metrics {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d4d4d8;
+}
+
+.metric-pill.pill-likes { color: #fca5a5; }
+.metric-pill.pill-comments { color: #93c5fd; }
+.metric-pill.pill-shares { color: #6ee7b7; }
+
+/* =========================================================
+   Analytics Table & Insights View
+   ========================================================= */
+.admin-analytics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.analytics-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.analytics-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f4f4f5;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.analytics-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+
+.analytics-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #e4e4e7;
+}
+
+.analytics-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.analytics-rank {
+  font-weight: 700;
+  color: var(--muted);
+  width: 40px;
+}
+
+.analytics-title {
+  font-weight: 600;
+  color: #fff;
+}
+
+.analytics-score-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.analytics-platforms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.platform-stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.platform-stat-badge strong {
+  color: #fff;
+  font-size: 1rem;
+}
+

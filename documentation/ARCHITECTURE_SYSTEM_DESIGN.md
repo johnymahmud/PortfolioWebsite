@@ -75,7 +75,9 @@ PortfolioWebsite/
  │       │   └── [slug]/                  <-- Journal Item API (GET, PUT, PATCH, DELETE)
  │       ├── reactions/                   <-- Reactions API (GET, POST with Rate Limiting)
  │       ├── comments/                    <-- Comments API (GET, POST with Honeypot, PATCH, DELETE)
- │       ├── analytics/share/             <-- Share Tracking API (GET, POST)
+ │       ├── analytics/                   <-- Engagement Analytics Engine
+ │       │   ├── share/                   <-- Share Tracking API (GET, POST)
+ │       │   └── overview/                <-- Aggregated Overview & Ranking API (GET)
  │       └── notifications/               <-- Notifications API (GET, PATCH, DELETE)
  ├── components/                          <-- Modular UI Components
  │   ├── admin/                           <-- Admin WYSIWYG & AdminNotificationBell
@@ -89,7 +91,7 @@ PortfolioWebsite/
  ├── styles/                              <-- Modular CSS System
  │   ├── base.css, layout.css             <-- Design tokens, grid, reset
  │   ├── engagement.css                   <-- Reactions, comments, share buttons styling
- │   └── admin/admin.css                  <-- Admin studio & notification bell styles
+ │   └── admin/admin.css                  <-- Admin studio, KPI stats & analytics styles
  ├── scripts/                             <-- Database SQL Migration Scripts
  │   ├── supabase-journal-setup.sql       <-- Projects & journals tables setup
  │   └── supabase-engagement-setup.sql    <-- Reactions, comments, share_logs, notifications
@@ -107,4 +109,5 @@ PortfolioWebsite/
    - Cloudflare Turnstile integration readiness.
    - Default `status = 'pending'` on all guest comments ensures zero malicious links or spam appear on the live website before admin approval.
 4. **Real-time Push Notifications:** Admin receives live visual alerts with unread badge counters via Supabase Realtime WebSockets whenever a visitor comments, reacts, or shares an artwork.
-5. **Decoupled Client-Side Resilience:** If any new table has not yet been migrated in Supabase, the API handlers employ graceful schema fallbacks (`Could not find the table` catch) so the public portfolio continues functioning with 100% uptime.
+5. **Engagement Analytics Aggregation:** High-performance aggregation endpoint (`/api/v1/analytics/overview`) computes live reaction totals, comment states, and multi-channel share distributions for top KPI dashboard cards and per-work performance leaderboards.
+6. **Decoupled Client-Side Resilience:** If any new table has not yet been migrated in Supabase, the API handlers employ graceful schema fallbacks (`Could not find the table` catch) so the public portfolio continues functioning with 100% uptime.

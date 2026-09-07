@@ -40,6 +40,7 @@
 | `/api/v1/reactions` | `GET`, `POST` | 1-click likes/reactions with IP rate-limiting | ✅ 200 OK |
 | `/api/v1/comments` | `GET`, `POST`, `PATCH`, `DELETE` | Guest comments (Honeypot trap, moderation workflow) | ✅ 200 OK |
 | `/api/v1/analytics/share`| `GET`, `POST` | Social share tracking (WhatsApp, LinkedIn, Facebook, Link) | ✅ 200 OK |
+| `/api/v1/analytics/overview`| `GET` | Engagement Analytics Overview (Totals, Platform shares, per-item metrics) | ✅ 200 OK |
 | `/api/v1/notifications`| `GET`, `PATCH`, `DELETE` | Admin live notification hub & mark-as-read | ✅ 200 OK |
 
 ---

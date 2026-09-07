@@ -56,6 +56,7 @@ export default function AdminDashboardPage() {
   });
 
   const [comments, setComments] = useState([]);
+  const [analyticsData, setAnalyticsData] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -64,6 +65,14 @@ export default function AdminDashboardPage() {
   async function loadData() {
     setLoading(true);
     try {
+      // Always fetch latest engagement analytics overview for KPI stats
+      fetch('/api/v1/analytics/overview')
+        .then((r) => r.json())
+        .then((res) => {
+          if (res.success) setAnalyticsData(res.data);
+        })
+        .catch((e) => console.error('Error fetching analytics overview:', e));
+
       if (activeTab === 'projects') {
         const data = await fetchProjects({ territory: activeTerritory, isPublishedOnly: false });
         setProjects(data);
@@ -74,6 +83,15 @@ export default function AdminDashboardPage() {
         const res = await fetch('/api/v1/comments?status=all');
         const json = await res.json();
         setComments(json.data || []);
+      } else if (activeTab === 'analytics') {
+        const [projData, jourData, commRes] = await Promise.all([
+          fetchProjects({ territory: 'all', isPublishedOnly: false }),
+          fetchJournals({ status: 'all' }),
+          fetch('/api/v1/comments?status=all').then((r) => r.json()),
+        ]);
+        setProjects(projData);
+        setJournals(jourData);
+        setComments(commRes.data || []);
       }
     } catch (err) {
       console.error('Error loading admin data:', err);
@@ -280,6 +298,13 @@ export default function AdminDashboardPage() {
           >
             💬 Comments Moderation
           </a>
+          <a
+            href="#"
+            className={activeTab === 'analytics' ? 'is-active' : ''}
+            onClick={(e) => { e.preventDefault(); setActiveTab('analytics'); }}
+          >
+            📊 Engagement Analytics
+          </a>
           <Link href="/" target="_blank" rel="noopener noreferrer">
             View Website ↗
           </Link>
@@ -294,26 +319,32 @@ export default function AdminDashboardPage() {
       <main id="admin-dashboard" className="admin-main">
         <header className="admin-page-header">
           <div>
-            <p className="admin-page-eyebrow">Content Management</p>
+            <p className="admin-page-eyebrow">
+              {activeTab === 'analytics' ? 'Audience Activity & Metrics' : 'Content Management'}
+            </p>
             <h1>
               {activeTab === 'projects'
                 ? 'See My Work Projects'
                 : activeTab === 'journals'
                 ? 'Journal'
-                : 'Visitor Comments Moderation'}
+                : activeTab === 'comments'
+                ? 'Visitor Comments Moderation'
+                : 'Visitor Engagement & Analytics Hub'}
             </h1>
             <p>
               {activeTab === 'projects'
                 ? 'Upload, publish, edit, and organize selected works across Fine Arts, Professional Works, and Passion Works.'
                 : activeTab === 'journals'
                 ? 'Create, edit and publish articles, essays, poetry, stories and personal journal entries.'
-                : 'Review, approve, reject, or delete visitor comments across all artworks and essays.'}
+                : activeTab === 'comments'
+                ? 'Review, approve, reject, or delete visitor comments across all artworks and essays.'
+                : 'Live audience engagement metrics, reaction counts, visitor comments, and social share tracking.'}
             </p>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <AdminNotificationBell onSelectNotification={() => setActiveTab('comments')} />
-            {activeTab !== 'comments' && (
+            {activeTab !== 'comments' && activeTab !== 'analytics' && (
               <button
                 type="button"
                 id="new-project-button"
@@ -325,6 +356,41 @@ export default function AdminDashboardPage() {
             )}
           </div>
         </header>
+
+        {/* TOP KPI STATS CARDS */}
+        <section className="admin-stats-grid" aria-label="Engagement KPI overview">
+          <div className="admin-stat-card">
+            <div className="stat-icon-wrapper stat-icon-reactions">💖</div>
+            <div className="stat-info">
+              <span className="stat-number">{analyticsData?.totals?.reactions ?? 0}</span>
+              <span className="stat-label">Total Likes</span>
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon-wrapper stat-icon-comments">💬</div>
+            <div className="stat-info">
+              <span className="stat-number">{analyticsData?.totals?.comments ?? 0}</span>
+              <span className="stat-label">Comments</span>
+              {(analyticsData?.totals?.pending_comments ?? 0) > 0 && (
+                <span className="stat-subtext">⚠️ {analyticsData.totals.pending_comments} Pending</span>
+              )}
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon-wrapper stat-icon-shares">🔗</div>
+            <div className="stat-info">
+              <span className="stat-number">{analyticsData?.totals?.shares ?? 0}</span>
+              <span className="stat-label">Total Shares</span>
+            </div>
+          </div>
+          <div className="admin-stat-card">
+            <div className="stat-icon-wrapper stat-icon-works">🎨</div>
+            <div className="stat-info">
+              <span className="stat-number">{projects.length + journals.length}</span>
+              <span className="stat-label">Total Works</span>
+            </div>
+          </div>
+        </section>
 
         {loading && (
           <div className="admin-status-message" role="status">
@@ -417,6 +483,11 @@ export default function AdminDashboardPage() {
                     <p className="dashboard-project-details">
                       {project.project_year || project.year || '2026'} · {project.client_name || project.client || 'Self'} · Order: {project.sort_order || 1}
                     </p>
+                    <div className="admin-item-metrics">
+                      <span className="metric-pill pill-likes" title="Total Likes">❤️ {analyticsData?.item_metrics?.[project.id]?.reactions ?? 0}</span>
+                      <span className="metric-pill pill-comments" title="Total Comments">💬 {analyticsData?.item_metrics?.[project.id]?.comments ?? 0}</span>
+                      <span className="metric-pill pill-shares" title="Total Shares">🔗 {analyticsData?.item_metrics?.[project.id]?.shares ?? 0}</span>
+                    </div>
                   </div>
 
                   <div className="dashboard-project-actions">
@@ -458,6 +529,11 @@ export default function AdminDashboardPage() {
                     <p className="dashboard-project-details">
                       {journal.excerpt || 'No excerpt'}
                     </p>
+                    <div className="admin-item-metrics">
+                      <span className="metric-pill pill-likes" title="Total Likes">❤️ {analyticsData?.item_metrics?.[journal.id]?.reactions ?? 0}</span>
+                      <span className="metric-pill pill-comments" title="Total Comments">💬 {analyticsData?.item_metrics?.[journal.id]?.comments ?? 0}</span>
+                      <span className="metric-pill pill-shares" title="Total Shares">🔗 {analyticsData?.item_metrics?.[journal.id]?.shares ?? 0}</span>
+                    </div>
                   </div>
 
                   <div className="dashboard-project-actions">
@@ -478,6 +554,76 @@ export default function AdminDashboardPage() {
                   </div>
                 </article>
               ))}
+            </div>
+          ) : activeTab === 'analytics' ? (
+            <div className="admin-analytics-container">
+              {/* SOCIAL PLATFORMS SHARE METRICS */}
+              <div className="analytics-card">
+                <h3>🌐 Social Media Shares Distribution</h3>
+                <div className="analytics-platforms-list">
+                  <div className="platform-stat-badge">
+                    <span>💬 WhatsApp:</span>
+                    <strong>{analyticsData?.platforms?.whatsapp ?? 0}</strong>
+                  </div>
+                  <div className="platform-stat-badge">
+                    <span>💼 LinkedIn:</span>
+                    <strong>{analyticsData?.platforms?.linkedin ?? 0}</strong>
+                  </div>
+                  <div className="platform-stat-badge">
+                    <span>📘 Facebook:</span>
+                    <strong>{analyticsData?.platforms?.facebook ?? 0}</strong>
+                  </div>
+                  <div className="platform-stat-badge">
+                    <span>📋 Direct Link Copy:</span>
+                    <strong>{analyticsData?.platforms?.copy_link ?? 0}</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* TOP ENGAGEMENT RANKING TABLE */}
+              <div className="analytics-card">
+                <h3>🏆 Content Performance Ranking (All Works & Essays)</h3>
+                <table className="analytics-table">
+                  <thead>
+                    <tr>
+                      <th className="analytics-rank">#</th>
+                      <th>Title</th>
+                      <th>Type / Category</th>
+                      <th>Likes</th>
+                      <th>Comments</th>
+                      <th>Shares</th>
+                      <th>Engagement Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      ...projects.map((p) => ({ ...p, item_type: 'Project', sub_cat: p.work_type || p.category })),
+                      ...journals.map((j) => ({ ...j, item_type: 'Journal', sub_cat: j.category })),
+                    ]
+                      .map((item) => {
+                        const m = analyticsData?.item_metrics?.[item.id] || { reactions: 0, comments: 0, shares: 0 };
+                        const score = m.reactions * 1 + m.comments * 2 + m.shares * 3;
+                        return { ...item, metrics: m, score };
+                      })
+                      .sort((a, b) => b.score - a.score)
+                      .map((item, idx) => (
+                        <tr key={item.id}>
+                          <td className="analytics-rank">#{idx + 1}</td>
+                          <td className="analytics-title">{item.title}</td>
+                          <td>
+                            <small style={{ color: '#a1a1aa' }}>{item.item_type} · {item.sub_cat || 'General'}</small>
+                          </td>
+                          <td style={{ color: '#fca5a5' }}>❤️ {item.metrics.reactions}</td>
+                          <td style={{ color: '#93c5fd' }}>💬 {item.metrics.comments}</td>
+                          <td style={{ color: '#6ee7b7' }}>🔗 {item.metrics.shares}</td>
+                          <td>
+                            <span className="analytics-score-badge">{item.score} pts</span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : (
             <div className="dashboard-comments-moderation-list" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>

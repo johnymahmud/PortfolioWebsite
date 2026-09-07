@@ -23,25 +23,29 @@
 - [ ] Add SEO Open Graph tags for social media sharing.
 
 ### 📍 Phase 2: Unified 3-Tier Architecture & Standard REST APIs (with PATCH)
-- [ ] **Tier A (Public Frontend):** Remove public `CMS Admin` link from global navigation header across all pages; convert into hidden/secret access.
-- [ ] **Tier B (Backend API Engine):** Implement modular Next.js Route Handlers (`app/api/v1/projects`, `app/api/v1/journals`, `app/api/v1/media`) with standardized `GET`, `POST`, `PUT`, `PATCH`, `DELETE` methods and uniform JSON responses.
+- [x] **Tier A (Public Frontend):** Remove public `CMS Admin` link from global navigation header across all pages; convert into hidden/secret access.
+- [x] **Tier B (Backend API Engine):** Implement modular Next.js Route Handlers (`app/api/v1/projects`, `app/api/v1/journals`, `reactions`, `comments`, `analytics`) with standardized `GET`, `POST`, `PUT`, `PATCH`, `DELETE` methods and uniform JSON responses.
 - [ ] **Tier C (Protected Admin Studio):** Implement route protection and admin authentication with Supabase Auth or Session Guard.
 
 ### 📍 Phase 3: Interactive Engagement System (Like, Comment & Share)
-- [ ] **Smart Reactions (Likes):** Implement 1-click frictionless Heart/Clap counter with `localStorage` persistence and IP-hash rate limiting.
-- [ ] **Guest Comments Engine:** Guest submission form with Honeypot and Cloudflare Turnstile anti-spam protection; pending by default.
-- [ ] **Social Share Tracker:** Web Share API integration with copy link and event logging to `/api/v1/analytics/share`.
+- [x] **Smart Reactions (Likes):** Implement 1-click frictionless Heart/Clap counter with `localStorage` persistence and IP-hash rate limiting.
+- [x] **Guest Comments Engine:** Guest submission form with Honeypot and Cloudflare Turnstile anti-spam protection; pending by default.
+- [x] **Social Share Tracker:** Web Share API integration with copy link and event logging to `/api/v1/analytics/share`.
 
-### 📍 Phase 4: Admin Live Notification Hub & Moderation Center
-- [ ] **Realtime Notification Bell:** Supabase Realtime WebSocket subscription for instant notification badges on new comments, likes, and shares.
-- [ ] **Comment Moderation Studio:** One-click Approve/Reject interface in `/admin` with instant live publishing.
-- [ ] **Activity Analytics:** Insights dashboard displaying most liked and shared projects and essays.
+### 📍 Phase 4: Admin Live Notification Hub & Engagement Analytics
+- [x] **Realtime Notification Bell:** Supabase Realtime WebSocket subscription for instant notification badges on new comments, likes, and shares.
+- [x] **Comment Moderation Studio:** One-click Approve/Reject interface in `/admin` with instant live publishing.
+- [x] **Visitor Engagement & Analytics Hub:** Top KPI stats cards, inline per-work metric pills (`❤️`, `💬`, `🔗`), and Content Performance leaderboard displaying most liked and shared projects and essays via `/api/v1/analytics/overview`.
 
-### 📍 Phase 5: Profile, About & Contact Inbox Editor
+### 📍 Phase 5: Dynamic Journal Detail Routes (`/journal/[slug]`)
+- [ ] Create dynamic Next.js App route `app/journal/[slug]/page.js` to display full individual art essays with rich HTML typography.
+- [ ] Add SEO Open Graph tags for social media sharing.
+
+### 📍 Phase 6: Profile, About & Contact Inbox Editor
 - [ ] Build Profile & About section editor in Admin Dashboard.
 - [ ] Implement Contact Message Inbox backed by Supabase `contact_messages` table.
 
-### 📍 Phase 6: Production Deployment & Domain Setup
+### 📍 Phase 7: Production Deployment & Domain Setup
 - [ ] Deploy Next.js repository to **Vercel** with automatic GitHub CD pipeline.
 - [ ] Configure custom domain and SSL certificate.
 

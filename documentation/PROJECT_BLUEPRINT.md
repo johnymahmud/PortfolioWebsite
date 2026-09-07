@@ -50,12 +50,14 @@ The primary objective of this project is to build an international-grade, visual
    - Uniform JSON response structure across all endpoints (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`).
    - Partial resource updating support via `PATCH` method.
    - Graceful schema fallbacks for unmigrated database tables.
+   - Dedicated Analytics aggregation endpoint (`/api/v1/analytics/overview`) serving platform share counts, engagement totals, and per-item metrics.
 
 5. **Admin Content Management Studio (`/admin`):**
    - Direct file uploads to Supabase Storage bucket `portfolio-assets`.
    - Full CRUD operations for portfolio projects and journal essays with `react-quill-new` WYSIWYG editor.
    - Dedicated **Comments Moderation Studio** allowing 1-click Approve & Publish, Reject, and Delete.
    - **Live Notification Hub** with topbar bell icon and Supabase Realtime WebSocket unread badge counters.
+   - **Visitor Engagement & Analytics Hub:** Top KPI stats cards (Total Likes, Comments & Pending Review, Total Shares, Total Works), per-item inline metric pills (`❤️ Likes`, `💬 Comments`, `🔗 Shares`), and a Content Performance Ranking leaderboard.
 
 ---
 
